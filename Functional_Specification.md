@@ -75,7 +75,7 @@ The device would be a small box with a set a sensors to install on the power sup
 >Work In Progress
 
 Since the two only possible user inputs will be a repport request or a ON/OFF request, the two only error the device shall handle are :
-- a wrong request (wrong sintax for exemple)
+- a wrong request (wrong syntax for exemple)
 - to much request (since were are limited in the number of message we can send)
 
 In those cases the device shall send an error message (if possible) or it's silence should be considered as error ???
