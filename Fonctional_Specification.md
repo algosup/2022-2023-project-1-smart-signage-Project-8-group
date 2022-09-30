@@ -33,33 +33,21 @@ The Sixth risk is regarding the communication, we will need to ensure that every
 
 ## Use cases
 
->Work In Progress
+1. The user want to reduce the power usage for environmental and financial reasons, the device shall help by diming and/or turning of the light at certain points in time (at night or when the ambiant light is reduced compared to a full sunlight for instance).
 
->>L.E.Ds -> DEVICE -> ELECTRICITY
+2. The user want to know if the signage is ON or OFF without going out to see it, the device shall sent repport containning the wanted information every [insert number] hours, or the user can send a request.
 
->>>control
+3. The user want to know the state of his signage without sending a technician on site, the repport sent by the device shall contain usefull informations, allowing the user to get an idea of the state of the signage.
 
->>>report
-
->>>autonomous
-
-1. User want to reduce the power usage for environment and money, the device shall help by diming and/or turning of the light at certain points in time like at night or when the ambiant light is reduced compared to a full sunlight.
-
-2. User want to know if the signage is on or off without going out to see it, the device shall sent repport containning the wanted information every [insert number] hours, or user can send a request.
-
-3. User want to know the state of his signage without sending a technician on site, the repport sent by the device shall contain this information, allowing the user to know the state of the signage.
-
-4. User want to remotly control the signage, the device shall allow that action. at least ON/OFF
+4. The user want to remotly control the signage, the device shall allow that control (at least ON/OFF)
 
 ### persona 
 
->Work In Progress
+- Karen is the proud owner of a little restaurant in a small town near Lyon, France. Her restaurant is equiped with a small signage, However this signage isn't power efficient and is costing more and more to power and maintain each year. Also, Karen is very concern by the climat change and current ecological situation, therefore she would like to reduce her energy consumption. 
 
-- little Restaurant owner
+- Dimitri is a manager at McDonald, he's in charge of the power consomption on the French territory. He has identify the brand's signages as really power heavy and need a way of managing these without having to call someone on-site just to see if the signage is ON. Moreover he would need a way of reducing the power consomption of those signages in order to meet the new energy laws requirement.
 
-- A big brand (for example McDonal)
-
-- a technician that don't want to go on-site every time
+- François is a technician in charge of signages maintenance, at the moment, he has to go on-site to inspect every signage in order to know if there working properly. he would need a way of monitoring each signage without having to go there, furthermore a way of knowing what the issue is on the signage that need maintenance could save him a lot of time.
 
 ## Requirements Specs
 
@@ -80,13 +68,13 @@ connect device between L.E.Ds and power supply, plug it.
 
 >Work In Progress
 
-The device shall be a small box with a set a sensors to install on the power supply. it will send repport every [insert number] hours containning something (probably)
+The device would be a small box with a set a sensors to install on the power supply. it will send repport every [insert number] hours containning something (probably)
 
 ## Error Reporting
 
 >Work In Progress
 
-Since the only possible user input will be a repport request, the two only error the device shall handle are :
+Since the two only possible user inputs will be a repport request or a ON/OFF request, the two only error the device shall handle are :
 - a wrong request (wrong sintax for exemple)
 - to much request (since were are limited in the number of message we can send)
 
