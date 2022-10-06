@@ -27,7 +27,7 @@ In other words, this project need to manage a set of L.E.Ds in order to control 
 
 <s>*This image is temporary.</s>
 
-![temp electronical diagram](./Documents/Images/handmadeElectronicalDiagram.jpg)
+![temp electronical diagram](./Images/handmadeElectronicalDiagram.jpg)
 
 ## Etablishing connection to the Lora-E5
 
