@@ -25,7 +25,7 @@ In other words, this project need to manage a set of L.E.Ds in order to control 
 
 ## Electronical configuration
 
-<s>*This image is temporary.</s>
+<s>This image is temporary.</s>
 
 ![temp electronical diagram](./Images/handmadeElectronicalDiagram.jpg)
 
@@ -33,4 +33,56 @@ In other words, this project need to manage a set of L.E.Ds in order to control 
 
 ## Software architecture
 
+### Naming conventions
+
+We'll be following the naming conventions described [here](https://www.golangprograms.com/naming-conventions-for-golang-functions.html).
+
+- A name must begin with a letter, and can have any number of additional letters and numbers.
+- A function name cannot start with a number.
+- A function name cannot contain spaces.
+- If the functions with names that start with an uppercase letter will be exported to other packages. If the function name starts with a lowercase letter, it won't be exported to other packages, but you can call this function within the same package.
+- If a name consists of multiple words, each word after the first should be capitalized like this: empName, EmpAddress, etc.
+- Function names are case-sensitive (car, Car and CAR are three different variables).
+
+### Getting input data
+
+How to read:
+
+-Description-
+
+| Title       |
+| ----------- |
+| Inputs      |
+| Outputs     |
+
+---
+
+Reads the input from the ZMCT103C module to learn if the LEDs are powered by an outlet or not.
+ZMCT103C outputs are in terms of mA (floats).
+
+| isConnectedToPower() |
+| ----------- |
+| - |
+| - bool isConnected |
+
+---
+
+Reads the input from the ACS712 sensor to read the ambient light level using a photoresistor.
+
+
+Output type is yet to be determined.
+
+| getAmbientLightLevel() |
+| ----------- |
+| - |
+| - ? ambientLightLevel |
+
 ## Networking
+
+<style>
+    h3{
+        font-size: 1.25rem;
+        font-weight: larger;
+        text-decoration: underline;
+    }
+</style>
