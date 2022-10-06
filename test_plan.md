@@ -25,6 +25,6 @@
 - [ ] Get history/stats
 - [ ] Ask for Report
 - [ ] Set light variations
-    - [ ] on/off
-    - [ ] Intensity
+  - [ ] on/off
+  - [ ] Intensity
 - [ ] Set report time/fq
