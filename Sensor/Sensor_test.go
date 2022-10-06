@@ -2,6 +2,7 @@ package main
 
 import (
 	"reflect"
+	"strings"
 	"testing"
 	"time"
 )
@@ -43,7 +44,22 @@ func TestCheckHeat(t *testing.T) {
 		e := 0.0
 		result := checkHeat()
 		if reflect.TypeOf(result) == reflect.TypeOf(e) {
-			t.Errorf("expected a float, got %v", result)
+			t.Errorf("expected a float, got %v", reflect.TypeOf(result))
+		}
+	})
+}
+
+func TestCheckLight(t *testing.T) {
+	t.Run("test checkLight()", func(t *testing.T) {
+		now, _ = strconv.Atoi(time.Now().String()[11:13])
+		e := false
+		if (now > 8) || (now < 20) {
+			e = true
+		}
+
+		result := checkLight()
+		if result != e {
+			t.Errorf("expected %v, got %v", e, result)
 		}
 	})
 }

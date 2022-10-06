@@ -9,6 +9,7 @@ const led = machine.PA5 //test LED
 const pa4 = machine.PA4 //LED band
 const pb6 = machine.PB6 //High voltage sensor
 const pb7 = machine.PB7 //Low Voltage sensor
+const a3 = machine.A3
 
 func main() {
 	// test if flash is succesfull
@@ -34,6 +35,11 @@ func checkPowerStatusL() bool {
 
 func checkHeat() float32 {
 	return -1.2
+	//figure out how to get anything from the temp sensor
+}
+
+func checkLight() bool {
+	return true
 }
 
 func blinkLED() {
