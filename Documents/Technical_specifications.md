@@ -58,7 +58,7 @@ How to read:
 ---
 
 Reads the input from the ZMCT103C module to learn if the LEDs are powered by an outlet or not.
-ZMCT103C outputs are in terms of mA (floats).
+ZMCT103C outputs are in terms of mA (type float). In our case the output should be around 0.25A under power.
 
 | isConnectedToPower() |
 | ----------- |
@@ -68,14 +68,14 @@ ZMCT103C outputs are in terms of mA (floats).
 ---
 
 Reads the input from the ACS712 sensor to read the ambient light level using a photoresistor.
+For details on how to use the module look at [this example](https://www.electronicshub.org/interfacing-acs712-current-sensor-with-arduino/).
 
-
-Output type is yet to be determined.
+ACS712 outputs are in mV (type float). The expected voltage depends on the input voltage and the ambient light level. The output is to be normalised into a float between 0-1.
 
 | getAmbientLightLevel() |
 | ----------- |
 | - |
-| - ? ambientLightLevel |
+| - float ambientLightLevel |
 
 ## Networking
 
