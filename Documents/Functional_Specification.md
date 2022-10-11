@@ -142,7 +142,7 @@ Bio :
 
 ## Requirements Specs
 
-> Work In progress (need details lot of them, you need to choose for those assholes)
+> Work In progress (need details lot of them, you need to choose for others)
 
 For this project to be considered done, we need to have a least the following specifications :
 - Turn ON the L.E.Ds remotly, the device will receive a code/instruction to turn ON the L.E.Ds.
