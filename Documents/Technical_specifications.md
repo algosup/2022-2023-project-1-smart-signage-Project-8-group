@@ -1,7 +1,6 @@
-# Technical specifications
-<b>Group 8</b>
+<h1 style="font-size: 2.5rem;">Technical specifications - Group 8</h1>
 
-## Project Scope
+# Project Scope
 
 This project was proposed by SignAll, a French company that has been manufacturing large luminous signage since 1962. They supply a large number of customers such as McDonald’s, Burger King, La Poste, Orange, AXA, Crédit Agricole, Total, etc. to name a few.
 
@@ -13,7 +12,7 @@ Lately, environmental concerns and cost of energy has increased the pressure on 
 
 In other words, this project need to manage a set of L.E.Ds in order to control these remotly. That control shall include turning those said L.E.Ds ON or OFF and being able to dim the light therefore reducing the energy comsumption. The device should also be able to work on is own, dim or turn OFF L.E.Ds at a given time of the day or depending of the ambiant light for exemple.
 
-## Roadmap
+# Roadmap
 
 - [ ] Setting up electronical model following the Technical Specifications
 - [ ] Flashing the Lora-E5
@@ -23,41 +22,44 @@ In other words, this project need to manage a set of L.E.Ds in order to control 
 - [ ] Etablish connection with TheThingsNetwork
 - [ ] Set up protocol(s) for long range communication
 
-## Electronical configuration
+# Electronical configuration
 
 <s>This image is temporary.</s>
 
 ![temp electronical diagram](./Images/handmadeElectronicalDiagram.jpg)
 
-## Etablishing connection to the Lora-E5
+# Etablishing connection to the Lora-E5
 
-## Software architecture
+- WIP
 
-### Naming conventions
+# Naming conventions
 
 We'll be following the naming conventions described [here](https://www.golangprograms.com/naming-conventions-for-golang-functions.html).
 
-- A name must begin with a letter, and can have any number of additional letters and numbers.
-- A function name cannot start with a number.
-- A function name cannot contain spaces.
-- If the functions with names that start with an uppercase letter will be exported to other packages. If the function name starts with a lowercase letter, it won't be exported to other packages, but you can call this function within the same package.
-- If a name consists of multiple words, each word after the first should be capitalized like this: empName, EmpAddress, etc.
-- Function names are case-sensitive (car, Car and CAR are three different variables).
+- Every variable and function must be writen in camelcase and must start with a lower case letter.
 
-### Getting input data
 
-How to read:
+# Software architecture
 
--Description-
+## Global variables
 
-| Title       |
-| ----------- |
-| Inputs      |
-| Outputs     |
+- 
 
----
+## Functions
 
-Reads the input from the ZMCT103C module to learn if the LEDs are powered by an outlet or not.
+<details>
+    <summary>How to read</summary>
+    -Description-
+
+    | Title       |
+    | ----------- |
+    | Inputs      |
+    | Outputs     |
+</details>
+
+### isConnectedToPower()
+
+Read the input from the ZMCT103C module to learn if the LEDs are powered by an outlet or not.
 ZMCT103C outputs are in terms of mA (type float). In our case the output should be around 0.25A under power.
 
 | isConnectedToPower() |
@@ -65,9 +67,9 @@ ZMCT103C outputs are in terms of mA (type float). In our case the output should 
 | - |
 | - bool isConnected |
 
----
+### getAmbientLightLevel
 
-Reads the input from the ACS712 sensor to read the ambient light level using a photoresistor.
+Read the input from the ACS712 sensor to read the ambient light level using a photoresistor.
 For details on how to use the module look at [this example](https://www.electronicshub.org/interfacing-acs712-current-sensor-with-arduino/).
 
 ACS712 outputs are in mV (type float). The expected voltage depends on the input voltage and the ambient light level. The output is to be normalised into a float between 0-1.
@@ -77,7 +79,21 @@ ACS712 outputs are in mV (type float). The expected voltage depends on the input
 | - |
 | - float ambientLightLevel |
 
-## Networking
+### switchLeds()
+
+Turns leds on if imut is True and off if it is False.
+
+| switchLeds() |
+| ----------- |
+| - bool turnOn |
+| - |
+
+
+
+
+# Networking
+
+No idea about this one yet
 
 <style>
     h3{
