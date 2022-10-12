@@ -6,15 +6,28 @@ import (
 )
 
 func main() {
-	pin11 := machine.D11
-	pin11.Configure(machine.PinConfig{Mode: machine.PinOutput})
-	highTime := 1
-	lowTime := 1
-	//main loop
+
+	machine.InitPWM()
+	led := machine.PWM{machine.D11}
+	led.Configure()
+	machine.InitADC()
+	ldr := machine.ADC{machine.ADC0}
+	hV := machine.ADC{machine.ADC2}
+	ldr.Configure(machine.ADCConfig{})
 	for {
-		pin11.High()
-		time.Sleep(time.Millisecond / time.Duration(highTime))
-		pin11.Low()
-		time.Sleep(time.Millisecond * time.Duration(lowTime))
+		led.Set(uint16(3000))
+		lightSensor(ldr)
+		highVoltageSensor(hV)
+		time.Sleep(time.Second)
 	}
+}
+
+func lightSensor(ldr machine.ADC) {
+	fl := float32(ldr.Get())
+	println((fl / 65535.0) * 5.0)
+}
+
+func highVoltageSensor(hV machine.ADC) {
+	fl := float32(hV.Get())
+	println((fl / 65535.0) * 5.0)
 }
