@@ -1,3 +1,3 @@
-module sensorarduino
+module arduinobrain
 
 go 1.16
