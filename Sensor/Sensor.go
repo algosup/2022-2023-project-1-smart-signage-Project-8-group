@@ -2,8 +2,7 @@ package main
 
 import (
 	"machine"
-	"runtime"
-	"strconv"
+	// "strconv"
 	"time"
 )
 
@@ -14,7 +13,6 @@ var (
 )
 
 func main() {
-
 	machine.InitPWM()
 	machine.InitADC()
 	lS := machine.ADC{machine.ADC2} // A2 is the pin for the light sensor A2
@@ -28,6 +26,7 @@ func main() {
 
 	// //goroutine that calls SendMessage every 15 minutes to send the data to the gateway with payload = "lightSensorValue,highVoltage,lowVoltage"
 	// go func() {
+	//  InitAT()
 	// 	for range time.Tick(15 * time.Minute) {
 	// 		//convert the values lightSensorValue, highVoltage and lowVoltage to string
 	// 		str := (strconv.FormatFloat(float64(lightSensorValue), 'f', 2, 32) + "," + strconv.FormatFloat(float64(highVoltage), 'f', 2, 32) + "," + strconv.FormatFloat(float64(lowVoltage), 'f', 2, 32))

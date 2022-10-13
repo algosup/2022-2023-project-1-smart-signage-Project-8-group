@@ -2,12 +2,27 @@ package main
 
 import (
 	"machine"
+	"time"
 )
 
 var (
 	failSend    int
 	failReceive int
 )
+
+func InitAT() {
+	machine.UART0.Configure(machine.UARTConfig{TX: machine.D1, RX: machine.D0})
+	var err error
+	for err != nil {
+		_, err = machine.UART0.Write([]byte("AT+JOIN\r\n"))
+		time.Sleep(time.Second * 5)
+		if err != nil {
+			println(err.Error())
+		} else {
+			println(ReadMessage())
+		}
+	}
+}
 
 // Send a message to the serial port of the lora module with the given payload
 func SendMessage(payload string) {
