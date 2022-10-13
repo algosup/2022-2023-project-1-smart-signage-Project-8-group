@@ -13,11 +13,13 @@ func main() {
 	machine.InitADC()
 	ldr := machine.ADC{machine.ADC0}
 	hV := machine.ADC{machine.ADC2}
+	lV := machine.ADC{machine.ADC4}
 	ldr.Configure(machine.ADCConfig{})
 	for {
 		A := lightSensor(ldr)
 		changeLight(A, led)
 		highVoltageSensor(hV)
+		lowVoltageSensor(lV)
 		time.Sleep(time.Second)
 	}
 }
@@ -34,6 +36,12 @@ func highVoltageSensor(hV machine.ADC) float32 {
 	return (fl / 65535.0) * 5.0
 }
 
+func lowVoltageSensor(lV machine.ADC) float32 {
+	fl := float32(lV.Get())
+	println(fl)
+	return (fl)
+}
+
 func changeLight(inLight float32, led machine.PWM) {
 	if inLight > 2.7 {
 		led.Set(uint16(0))
@@ -42,6 +50,6 @@ func changeLight(inLight float32, led machine.PWM) {
 	} else if inLight > 3.2 && inLight < 4 {
 		led.Set(uint16(42000))
 	} else {
-		led.Set(uint(3000))
+		led.Set(uint16(3000))
 	}
 }
