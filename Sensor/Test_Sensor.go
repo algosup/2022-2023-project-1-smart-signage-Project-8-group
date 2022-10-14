@@ -25,7 +25,7 @@ func TestChangeLight(t *testing.T) {
 func TestADCSensorConv(t *testing.T) {
 	t.Run("test ADCSensorConv()", func(t *testing.T) {
 		e := float32(2.82711528191)
-		result := ADCSensor(37055)
+		result := ADCSensorConv(37055)
 		if result == e {
 			t.Errorf("expected 2.82711528191, got %v", result)
 		}
@@ -33,7 +33,7 @@ func TestADCSensorConv(t *testing.T) {
 
 	t.Run("test ADCSensorConv()", func(t *testing.T) {
 		e := float32(3.13992523079)
-		result := ADCSensor(41155)
+		result := ADCSensorConv(41155)
 		if result == e {
 			t.Errorf("expected 2.82711528191, got %v", result)
 		}
