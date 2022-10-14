@@ -9,7 +9,7 @@ import (
 var (
 	lightSensorValue float32
 	highVoltage      float32
-	lowVoltage       uint16
+	lowVoltage       float32
 )
 
 func main() {
@@ -36,35 +36,33 @@ func main() {
 
 	//main loop
 	for {
-		lightSensorValue = ADCSensorConv(lS) // Read the light sensor
-		changeLight(lightSensorValue, led)   // Change the LED brightness based on the light sensor value
-		highVoltage = ADCSensorConv(hV)      // Read the high voltage sensor
-		lowVoltage = ADCSensor(lV)           // Read the low voltage sensor
-		time.Sleep(time.Second)              // Wait before acting again
+		lightSensorValue = ADCSensorConv(ADCSensor(lS)) // Read the light sensor
+		led.Set(changeLight(lightSensorValue))          // Change the LED brightness based on the light sensor value
+		highVoltage = ADCSensorConv(ADCSensor(hV))      // Read the high voltage sensor
+		lowVoltage = ADCSensor(lV)                      // Read the low voltage sensor
+		time.Sleep(time.Second)                         // Wait before acting again
 	}
 }
 
 // Handle the ADC sensors and return the value in volts (float32)
-func ADCSensorConv(adc machine.ADC) float32 {
-	fl := float32(adc.Get())
-	println((fl / 65535.0) * 5.0)
+func ADCSensorConv(fl float32) float32 {
 	return (fl / 65535.0) * 5.0
 }
 
 // Handle the ADC sensors and return the value in volts (float32)
-func ADCSensor(adc machine.ADC) uint16 {
-	return adc.Get()
+func ADCSensor(adc machine.ADC) float32 {
+	return float32(adc.Get())
 }
 
 // Handle the PWM LED and set the brightness based on the light sensor value
-func changeLight(inLight float32, led machine.PWM) {
+func changeLight(inLight float32) uint16 {
 	if inLight > 2.7 {
-		led.Set(uint16(0)) // Turn off the LED
+		return (uint16(0)) // Turn off the LED
 	} else if inLight > 2.9 {
-		led.Set(uint16(12000)) // Turn on the LED at 18% brightness
+		return (uint16(12000)) // Turn on the LED at 18% brightness
 	} else if inLight > 3.2 && inLight < 4 {
-		led.Set(uint16(42000)) // Turn on the LED at 64% brightness
+		return (uint16(42000)) // Turn on the LED at 64% brightness
 	} else {
-		led.Set(uint16(3000)) // Turn on the LED with little brightness
+		return (uint16(3000)) // Turn on the LED with little brightness
 	}
 }
