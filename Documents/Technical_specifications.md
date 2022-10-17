@@ -12,25 +12,56 @@ Lately, environmental concerns and cost of energy has increased the pressure on 
 
 In other words, this project need to manage a set of L.E.Ds in order to control these remotly. That control shall include turning those said L.E.Ds ON or OFF and being able to dim the light therefore reducing the energy comsumption. The device should also be able to work on is own, dim or turn OFF L.E.Ds at a given time of the day or depending of the ambiant light for exemple.
 
+# Hardware
+
+## Arduino Uno
+
+Most everything in the project will be controlled using an Arduino Uno for the following reasons:
+
+- It is easily accessible
+- It is compatible with every other module used for the project (Lora module is to be determined)
+- It is compatible with TinyGo
+- It contains an inbuilt crystal oscillator (which is theorically precise enought to be used as a clock)
+
+## Lora-E5
+
+We will attempt to control the final product trought the LoRaWan network.
+If the LoRa-E5 is the best solution is yet to be determined.
+
+## XY-MOS
+
+Switch used to turn the LEDs on/off.
+
+## ZMCT103C
+
+Sensor used to verify if the LEDs are powered.
+
+## Photoresistor
+
+Component used to measure ambient light.
+
+## Materials used for testing purposes
+
+- 12V LED strip
+- GPV-18-12 AC/DC converter
+
 # Roadmap
 
-- [ ] Setting up electronical model following the Technical Specifications
-- [ ] Flashing the Lora-E5
-- [ ] Progam Lora-E5 to read sensor data
-- [ ] Progam Lora-E5 to control LEDs
-- [ ] Progam Lora-E5 for PWM
+- [x] Control LEDs with XY-MOS
+- [x] Dim lights by changing on/off frequency of the LEDs
+
+- [x] Read data from ZMCT103C
+- [x] Read data from Photoresistor
+
+- [ ] Etablish connection between the Arduino and the LoRa-E5 for AT commands
 - [ ] Etablish connection with TheThingsNetwork
 - [ ] Set up protocol(s) for long range communication
 
 # Electronical configuration
 
-<s>This image is temporary.</s>
+This is how model of the final product must be set up.
 
-![temp electronical diagram](./Images/handmadeElectronicalDiagram.jpg)
-
-# Etablishing connection to the Lora-E5
-
-- WIP
+![Schematic](./Images/Schematic.png)
 
 # Naming conventions
 
@@ -102,3 +133,48 @@ No idea about this one yet
         text-decoration: underline;
     }
 </style>
+
+
+
+---
+###### Notes
+
+
+XY-MOS:
+- ~D
+- GND /
+
+ZMC: 
+- 5V /
+- A
+- GND /
+
+PR: /
+- A /
+- PW (5V?) /
+- GND /
+
+LORA:
+- 3V3 /
+- D RX
+- ~D TX
+- GND /
+
+ACS712:
+- 5V
+- A
+- GND
+
+DS3: 
+- 5V
+- A
+- A
+- GND
+
+Total:
+- 5V    -   3(4)
+- 3V3   -   1
+- A     -   5
+- D     -   1
+- ~D    -   2
+- GND   -   6
