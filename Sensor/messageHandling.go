@@ -11,36 +11,35 @@ var (
 )
 
 func InitAT() {
-	machine.UART0.Configure(machine.UARTConfig{TX: machine.D1, RX: machine.D0})
-	var err error
-	for err != nil {
-		_, err = machine.UART0.Write([]byte("AT+JOIN\r\n"))
-		time.Sleep(time.Second * 5)
-		if err != nil {
-			println(err.Error())
-		} else {
-			println(ReadMessage())
-		}
+	println("Initializing AT...")
+	time.Sleep(time.Millisecond * 200)
+	machine.UART0.Configure(machine.UARTConfig{BaudRate: 9600, TX: machine.D1, RX: machine.D0})
+	_, err := machine.UART0.Write([]byte("AT+JOIN\r\n"))
+	time.Sleep(time.Second * 15)
+	if err != nil {
+		println("Error: " + err.Error())
 	}
 }
 
 // Send a message to the serial port of the lora module with the given payload
 func SendMessage(payload string) {
-	_, err := machine.UART0.Write([]byte("AT+SEND=" + payload + "\r\n"))
+	println("Sending message...")
+	_, err := machine.UART0.Write([]byte(`AT+MSG= "` + payload + `"` + "\r\n"))
 	if err != nil {
-		println(err.Error())
+		println("Error: " + err.Error())
 		failSend++
 	}
 }
 
 // Read the serial port of the lora module and return the message
 func ReadMessage() string {
+	println("reading...")
 	var msg string
 	for {
 		if machine.UART0.Buffered() > 0 {
 			rb, err := machine.UART0.ReadByte()
 			if err != nil {
-				println(err.Error())
+				println("Error: " + err.Error())
 				failReceive++
 				return ""
 			}
@@ -48,6 +47,8 @@ func ReadMessage() string {
 			if msg[len(msg)-1] == '\n' {
 				return msg
 			}
+		} else {
+			time.Sleep(time.Millisecond * 500)
 		}
 	}
 }

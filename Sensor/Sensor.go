@@ -2,18 +2,17 @@ package main
 
 import (
 	"machine"
-
-	// "strconv"
+	"strconv"
 	"time"
 )
 
 var (
-	lightSensorValue float32       // The value of the light sensor
-	highVoltage      float32       // The value of the high voltage sensor
-	lowVoltage       float32       // The value of the low voltage sensor
-	lowLight         uint8   = 30  // The value of the low light in percentage
-	mediumLight      uint8   = 50  // The value of the medium light in percentage
-	highLight        uint8   = 100 // The value of the high light in percentage
+	lightSensorValue float32 // The value of the light sensor
+	highVoltage      float32 // The value of the high voltage sensor
+	lowVoltage       float32 // The value of the low voltage sensor
+	// lowLight         uint8   = 10  // The value of the low light in percentage
+	// mediumLight      uint8   = 50  // The value of the medium light in percentage
+	// highLight        uint8   = 100 // The value of the high light in percentage
 )
 
 func main() {
@@ -29,10 +28,11 @@ func main() {
 	hV.Configure(machine.ADCConfig{}) // Configure the ADC high voltage sensor
 	lV.Configure(machine.ADCConfig{}) // Configure the ADC low voltage sensor
 
-	// InitAT()
 	//main loop
 	for {
 		lightSensorValue = ADCSensor(lS) // Read the light sensor
+		highVoltage = ADCSensor(hV)      // Read the high voltage sensor
+		lowVoltage = ADCSensor(lV)       // Read the low voltage sensor
 
 		// get time of day, if night time between 01:00 and 06:00, set lights to 0%
 		// if time.Now().Hour() >= 1 && time.Now().Hour() <= 6 {
@@ -41,13 +41,15 @@ func main() {
 		led.Set(changeLight(lightSensorValue)) // Change the LED brightness based on the light sensor value
 		// }
 
-		highVoltage = ADCSensor(hV) // Read the high voltage sensor
-		lowVoltage = ADCSensor(lV)  // Read the low voltage sensor
+		temp := strconv.Itoa(int(lightSensorValue * 100))
+		//put a dot before the last 2 digits
+		temp = temp[:len(temp)-2] + "." + temp[len(temp)-2:]
+		str := temp
+		InitAT()
+		SendMessage(str) //send the message to the gateway
 
-		// str := (strconv.FormatFloat(float64(lightSensorValue), 'f', 2, 32) + "," + strconv.FormatFloat(float64(highVoltage), 'f', 2, 32) + "," + strconv.FormatFloat(float64(lowVoltage), 'f', 2, 32))
-		// SendMessage(str) //send the message to the gateway
-
-		time.Sleep(time.Minute * 15) // Sleep for 15 minutes
+		println(lowVoltage)         // Print the values to the serial monitor
+		time.Sleep(time.Minute * 8) // Sleep for 15 minutes
 	}
 }
 
@@ -59,14 +61,6 @@ func ADCSensor(adc machine.ADC) float32 {
 
 // Handle the PWM LED and set the brightness based on the light sensor value
 func changeLight(inLight float32) uint16 {
-	if inLight < 2.7 {
-		//return percentage of 65535 by highLight
-		return uint16((float32(highLight) / 100.0) * 65535.0) // high
-	} else if inLight >= 2.7 && inLight <= 3.7 {
-		//return percentage of 65535 by mediumLight
-		return uint16((float32(mediumLight) / 100.0) * 65535.0) // medium
-	} else {
-		//return percentage of 65535 by lowLight
-		return uint16((float32(lowLight) / 100.0) * 65535.0) // low
-	}
+	//return percentage of inLight out of 65535
+	return uint16((5.0 / inLight) * 65535.0)
 }
