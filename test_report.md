@@ -18,15 +18,15 @@
 - want: the LoRa and the LED connect
 - get: the LEDs lighted up
 - result: positive
-- comment:  
+- comment: the LEDs are connected to the LoRa via an arduino uno and an ST-link
 
 ### test n°3
 
 - name: additional connection
 - description: test an additionnal connection between the LoRa and an arduino uno
 - want: the LoRa and the arduino uno connect
-- get:
-- result:
+- get: the LED on the arduino uno lights up
+- result: positive
 - comment:
 
 ### test n°4
