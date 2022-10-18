@@ -2,15 +2,22 @@
 
 # Project Scope
 
-This project was proposed by SignAll, a French company that has been manufacturing large luminous signage since 1962. They supply a large number of customers such as McDonald’s, Burger King, La Poste, Orange, AXA, Crédit Agricole, Total, etc. to name a few.
+The purpose of this project to create a product to function as a controller for outdoor LED signes.
+The final product must be capable of:
 
-Their existing products are not connected therefore users must be on-site to know if the signage is on, functional, or out of order. Also, users cannot switch the signage on/off remotely (even when the law requires them to switch it off at a given time, when the shop closes for instance).
+- Turn the LEDs on and off.
+- Dim the LEDs using PWM.
+- Read the ambient light levels using a photoresistor and change the LEDs luminosity accordingly.
+- Verify if the LEDs are powered.
+- Verify if LEDs are functional.
+- Count the amount of time the LEDs have been up.
+- Connect to the LoRaWan network.
+- Send status reports trough the LoRaWan network (such as estimated remaining LED liftime, error messages, etc.)
+- Change device settings trough the LoRaWan network.
+- Linking multiple devices together and shotting them all down in case of an error. 
 
-When the owner of the brand on the signage is not the same as the owner of the place (think of a Burger Kind’s restaurant for instance), the maintenance team from the brand does not know what is going on at the place where the signage is installed and must go on-site on a regular basis just to check if everything is working. This results in additional costs and damage to the brand when the signage if out of order for too long.
-
-Lately, environmental concerns and cost of energy has increased the pressure on the manufacturer to produce more efficient solutions such as dimming the signage when it is getting dark or switch it off completely at a given time or when there is a shortage of electricity.
-
-In other words, this project need to manage a set of L.E.Ds in order to control these remotly. That control shall include turning those said L.E.Ds ON or OFF and being able to dim the light therefore reducing the energy comsumption. The device should also be able to work on is own, dim or turn OFF L.E.Ds at a given time of the day or depending of the ambiant light for exemple.
+The project must be realised using the TinyGo programming language. This is a limitation imposed by Algosup and we recommend C++ for the actual product as TinyGo has several limitations.
+On the same note we also recommend a slightly different hardware, this will be detaild later on.
 
 # Hardware
 
@@ -19,14 +26,13 @@ In other words, this project need to manage a set of L.E.Ds in order to control 
 Most everything in the project will be controlled using an Arduino Uno for the following reasons:
 
 - It is easily accessible
-- It is compatible with every other module used for the project (Lora module is to be determined)
+- It is compatible with every other module used for the project (including the Lora-E5)
 - It is compatible with TinyGo
-- It contains an inbuilt crystal oscillator (which is theorically precise enought to be used as a clock)
 
 ## Lora-E5
 
 We will attempt to control the final product trought the LoRaWan network.
-If the LoRa-E5 is the best solution is yet to be determined.
+We will be using a Lora-E5 for this purpose.
 
 ## XY-MOS
 
@@ -45,21 +51,25 @@ Component used to measure ambient light.
 - 12V LED strip
 - GPV-18-12 AC/DC converter
 
-# Roadmap
+# Recommended hardware
 
-- [x] Control LEDs with XY-MOS
-- [x] Dim lights by changing on/off frequency of the LEDs
+## Arduino MKR WAN 1310
 
-- [x] Read data from ZMCT103C
-- [x] Read data from Photoresistor
+This Arduino has an inbuilt system to connect to the LoRaWan network.
+This means it could replace the Arduino Uno as well as the Lora-E5.
+It could reduce the electricity usage of the product as well as severly simplify it.
+Peer-to-Peer communication is also simplified with this micro controller.
 
-- [ ] Etablish connection between the Arduino and the LoRa-E5 for AT commands
-- [ ] Etablish connection with TheThingsNetwork
-- [ ] Set up protocol(s) for long range communication
+Unfortunatelly, we had found out about thes contoller too late to actually implement it.
+
+## DS3231 Real-Time Clock Module
+
+The Arduinos inbuilt clock is both unprecise and temperature-sesitive.
+Therefore we recommend the use of an RTC module with an integrated temperature-compensated crystal oscillator.
 
 # Electronical configuration
 
-This is how model of the final product must be set up.
+This is how our model must be set up.
 
 ![Schematic](./Images/Schematic.png)
 
@@ -67,11 +77,9 @@ This is how model of the final product must be set up.
 
 We'll be following the naming conventions described [here](https://www.golangprograms.com/naming-conventions-for-golang-functions.html).
 
-- Every variable and function must be writen in camelcase and must start with a lower case letter.
-
-
 # Software architecture
-
+ WIP 
+ 
 ## Global variables
 
 - 
@@ -133,48 +141,3 @@ No idea about this one yet
         text-decoration: underline;
     }
 </style>
-
-
-
----
-###### Notes
-
-
-XY-MOS:
-- ~D
-- GND /
-
-ZMC: 
-- 5V /
-- A
-- GND /
-
-PR: /
-- A /
-- PW (5V?) /
-- GND /
-
-LORA:
-- 3V3 /
-- D RX
-- ~D TX
-- GND /
-
-ACS712:
-- 5V
-- A
-- GND
-
-DS3: 
-- 5V
-- A
-- A
-- GND
-
-Total:
-- 5V    -   3(4)
-- 3V3   -   1
-- A     -   5
-- D     -   1
-- ~D    -   2
-- GND   -   6
