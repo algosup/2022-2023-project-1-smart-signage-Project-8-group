@@ -16,15 +16,15 @@
 - name: secondary connection
 - description: test the connection between the LoRa and the LEDS
 - want: the LoRa and the LED connect
-- get:
-- result:
-- comment:
+- get: the LEDs lighted up
+- result: positive
+- comment:  
 
 ### test n°3
 
 - name: additional connection
-- description: test an additionnal connection between the LoRa and ...
-- want: the LoRa and the ... connect
+- description: test an additionnal connection between the LoRa and an arduino uno
+- want: the LoRa and the arduino uno connect
 - get:
 - result:
 - comment:

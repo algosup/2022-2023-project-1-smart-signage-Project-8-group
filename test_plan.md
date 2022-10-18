@@ -2,9 +2,15 @@
 
 ## Check Connections
 
+<<<<<<< Updated upstream
 - [] LoRa/Computer
 - [] LoRa/LED
 - [] LoRa/??
+=======
+- [x] LoRa/Computer
+- [ ] LoRa/LED
+- [ ] LoRa/arduino uno
+>>>>>>> Stashed changes
 
 ## Check Sensors
 
