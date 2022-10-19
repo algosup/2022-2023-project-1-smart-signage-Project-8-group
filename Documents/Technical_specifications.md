@@ -118,6 +118,13 @@ For details on how to use the module look at [this example](https://www.electron
 
 ACS712 outputs are in mV (type float). The expected voltage depends on the input voltage and the power usage of the LEDs (hence why we should be able to verfy the leds using it).
 
+# Testing plan
+
+Dummy data must be created to replace downlink and sensory data.
+The exact dummy data and its expected outputs are left to the discretion of the software engineer.
+
+Tests must NOT be uploaded on the Arduino.
+
 # Networking
 
 The datastructure of the information packets sent and recieved by the Lora will need to be engineered to minimise the data packat size and therefore the data loss in transmission.
