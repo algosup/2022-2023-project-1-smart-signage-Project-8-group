@@ -27,16 +27,16 @@
 - want: the LoRa and the arduino uno connect
 - get: the LED on the arduino uno lights up
 - result: positive
-- comment:
+- comment:the LoRa and the arduino uno are connected via a 3 volt and a ground
 
 ### test n°4
 
 - name: sensor n°1
 - description: check if the light sensor is working
 - want: light sensor is working
-- get:
-- result:
-- comment:
+- get: the value of light received is fluctuating
+- result: positive
+- comment: the sensor is branched on a bread board
 
 ### test n°5
 
