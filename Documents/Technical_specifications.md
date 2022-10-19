@@ -79,7 +79,7 @@ We'll be following the naming conventions described [here](https://www.golangpro
 
 # Software architecture
  WIP 
- 
+
 ## Global variables
 
 - 
@@ -132,7 +132,11 @@ Turns leds on if imut is True and off if it is False.
 
 # Networking
 
-No idea about this one yet
+The datastructure of the information packets sent and recieved by the Lora will need to be engineered to minimise the data packat size and therefore the data loss in transmission.
+The data packats structure is as follows:
+
+![Data structure](./Images/Data_Structure.png)
+
 
 <style>
     h3{
