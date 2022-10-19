@@ -123,7 +123,7 @@ ACS712 outputs are in mV (type float). The expected voltage depends on the input
 Dummy data must be created to replace downlink and sensory data.
 The exact dummy data and its expected outputs are left to the discretion of the software engineer.
 
-Tests must NOT be uploaded on the Arduino.
+Tests must NOT be uploaded into the Arduino.
 
 # Networking
 
