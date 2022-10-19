@@ -124,12 +124,3 @@ The datastructure of the information packets sent and recieved by the Lora will 
 The data packats structure is as follows:
 
 ![Data structure](./Images/Data_Structure.png)
-
-
-<style>
-    h3{
-        font-size: 1.25rem;
-        font-weight: larger;
-        text-decoration: underline;
-    }
-</style>
