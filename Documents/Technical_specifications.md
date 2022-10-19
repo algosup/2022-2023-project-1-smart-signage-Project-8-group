@@ -108,14 +108,15 @@ ZMCT103C outputs are in terms of mA (type float). In our case the output should 
 
 ## getAmbientLightLevel
 
-Read the input from the ACS712 sensor to read the ambient light level using a photoresistor.
-For details on how to use the module look at [this example](https://www.electronicshub.org/interfacing-acs712-current-sensor-with-arduino/).
-
-ACS712 outputs are in mV (type float). The expected voltage depends on the input voltage and the ambient light level. The output is to be normalised into a float between 0-1.
+Read the ambient light level using a photoresistor and convert it into percentage.
 
 ## verifLeds()
 
-Approximates LED status using output from the low voltage sensor.
+Approximates LED status using output from a ACS712 low voltage sensor.
+
+For details on how to use the module look at [this example](https://www.electronicshub.org/interfacing-acs712-current-sensor-with-arduino/).
+
+ACS712 outputs are in mV (type float). The expected voltage depends on the input voltage and the power usage of the LEDs (hence why we should be able to verfy the leds using it).
 
 # Networking
 
