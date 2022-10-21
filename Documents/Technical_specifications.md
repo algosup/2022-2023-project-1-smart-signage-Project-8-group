@@ -78,57 +78,52 @@ This is how our model must be set up.
 We'll be following the naming conventions described [here](https://www.golangprograms.com/naming-conventions-for-golang-functions.html).
 
 # Software architecture
- WIP 
 
-## Global variables
+![Sofware_Architecture](./Images/Software_Architecture.png)
 
-- 
+## readLoraDownLink()
 
-## Functions
+Read data recieved from server if available.
 
-<details>
-    <summary>How to read</summary>
-    -Description-
+## readSensorData()
 
-    | Title       |
-    | ----------- |
-    | Inputs      |
-    | Outputs     |
-</details>
+Gather sensor data
 
-### isConnectedToPower()
+## changeLocalData()
+
+Set data to match freshly gathered information (both from downlink and sensors).
+
+## setLeds()
+
+Turns leds on and off depending on available data.
+
+## sendLoraUplink()
+
+Send report to the server trough the LoRaWan network
+
+## isConnectedToPower()
 
 Read the input from the ZMCT103C module to learn if the LEDs are powered by an outlet or not.
 ZMCT103C outputs are in terms of mA (type float). In our case the output should be around 0.25A under power.
 
-| isConnectedToPower() |
-| ----------- |
-| - |
-| - bool isConnected |
+## getAmbientLightLevel
 
-### getAmbientLightLevel
+Read the ambient light level using a photoresistor and convert it into percentage.
 
-Read the input from the ACS712 sensor to read the ambient light level using a photoresistor.
+## verifLeds()
+
+Approximates LED status using output from a ACS712 low voltage sensor.
+
 For details on how to use the module look at [this example](https://www.electronicshub.org/interfacing-acs712-current-sensor-with-arduino/).
 
-ACS712 outputs are in mV (type float). The expected voltage depends on the input voltage and the ambient light level. The output is to be normalised into a float between 0-1.
+ACS712 outputs are in mV (type float). The expected voltage depends on the input voltage and the power usage of the LEDs (hence why we should be able to verfy the leds using it).
 
-| getAmbientLightLevel() |
-| ----------- |
-| - |
-| - float ambientLightLevel |
+# Testing plan
 
-### switchLeds()
+Dummy data must be created to replace downlink and sensory data.
+The exact dummy data and its expected outputs are left to the discretion of the software engineer.
 
-Turns leds on if imut is True and off if it is False.
-
-| switchLeds() |
-| ----------- |
-| - bool turnOn |
-| - |
-
-
-
+Tests must NOT be uploaded into the Arduino.
 
 # Networking
 
@@ -136,12 +131,3 @@ The datastructure of the information packets sent and recieved by the Lora will 
 The data packats structure is as follows:
 
 ![Data structure](./Images/Data_Structure.png)
-
-
-<style>
-    h3{
-        font-size: 1.25rem;
-        font-weight: larger;
-        text-decoration: underline;
-    }
-</style>
