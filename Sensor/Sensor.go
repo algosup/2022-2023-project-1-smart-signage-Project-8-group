@@ -2,6 +2,7 @@ package main
 
 import (
 	"machine"
+	"strconv"
 )
 
 var (
@@ -71,27 +72,33 @@ func mainProg(led machine.PWM, lS machine.ADC, hV machine.ADC, lV machine.ADC) {
 	highVoltage = ADCSensor(hV) // Read the high voltage sensor
 	lowVoltage = ADCSensor(lV)  // Read the low voltage sensor
 
-	println("highVoltage: ", highVoltage)
 	InitAT() //make sure the AT module is ready
 
-	str := string(rune((uint16(float32(lightSensorValue) / 65535 * 100)))) //create percentage of light sensor value and return it in rune
+	//uint to hex
+	str := strconv.FormatUint(uint64(float32(lightSensorValue)/65535*100), 16) //create percentage of light sensor value and return it in string hex format
 
 	if lightSensorValue != 0 {
 		timeCounter++
 		if timeCounter == 255 {
 			timeCounter = 0
 		}
-		str += string(rune(uint16(timeCounter)))
-	} else {
-		str += string(rune(uint16(0)))
+		str += strconv.FormatUint(uint64(timeCounter), 16)
 	}
 
 	//fake temporary data percentage added in str
-	str += string(rune(57))
+	str += strconv.FormatUint(uint64(54), 16)
 
 	//add 0x00 in string to the end of the string
-	str += "F"
-
+	str += strconv.FormatUint(uint64(0), 16)
 	println("str: ", str)
 	SendMessage(str) //send the message to the gateway
+}
+
+// string to hex
+func strToHex(str string) string {
+	var hex string
+	for _, char := range str {
+		hex += string(rune(uint16(char)))
+	}
+	return hex
 }
