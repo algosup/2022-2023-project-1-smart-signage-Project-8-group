@@ -67,15 +67,6 @@
 
 ### test n°8
 
-- name: output n°1
-- description: check if the error output works
-- want: we have an error
-- get:
-- result:
-- comment:
-
-### test n°9
-
 - name: output n°2
 - description: check if the report output works
 - want: we have a report
@@ -83,55 +74,74 @@
 - result:
 - comment:
 
-### test n°10
+### test n°9
 
-- name: output n°3
-- description: check if the warning output works
-- want: we have a warning
+- name: input n°1
+- read data from server if available
+- want: the data from the server
 - get:
 - result:
 - comment:
 
+### test n°10
+
+- name: input n°2
+- description: Gather sensor data
+- want: the data from the sensors
+- get:
+- comment
+
 ### test n°11
 
-- name: input n°1
-- description: check if we can set a timetable
-- want: we can set a timetable
+- name: input n°3
+- descrition: Set data to match freshly gathered information (from downlink and sensors)
+- want: data change acording to new information
 - get:
 - result:
 - comment:
 
 ### test n°12
 
-- name: input n°2
-- description: check if we can get the history/stats
-- want: we can access the history/stats
-- get:
-- desciption:
-
-### test n°13
-
-- name: input n°3
-- descrition: check if we can ask for a report
-- want: we have a report
+- name: input n°4
+- descrition: Turns leds on and off depending on available data
+- want: the lights either turn on or off
 - get:
 - result:
 - comment:
 
-### test n°14
+### test n°13
 
-- name: input n°4
-- descrition: check if we can varie the light
-- want: the light varie
+- name: input n°5
+- description: Send report to the server trough the LoRaWan network
+- want: the server receive a report trough the LoRaWan network
 - get:
 - result:
+- comment:  
+
+### test n°14
+
+- name: input n°6
+- description: Read the input from the ZMCT103C module to learn if the LEDs are powered or not
+- want: learn if the LEDs are powered or not
+- get:
 - comment:
 
 ### test n°15
 
-- name: input n°5
-- description: check if we can set report times/fq
-- want: we can set report times/fq
+- name: input n°7
+- description: Read the ambient light level using a photoresistor via a percentage
+- want: get a percentage indicating ambient light level
 - get:
+<<<<<<< Updated upstream
 - result:
+=======
+- comment:
+
+### test n°16
+
+- name: input n°8
+- description: Approximates LED status using output from a ACS712 low voltage sensor
+- want: an approximation of the LEDs status
+- get:
+>>>>>>> Stashed changes
 - comment:
