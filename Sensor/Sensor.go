@@ -6,15 +6,16 @@ import (
 )
 
 var (
-	switchFunc    bool    = true
-	lSV           float32       // The value of the light sensor
-	highVoltage   float32       // The value of the high voltage sensor
-	lowVoltage    float32       // The value of the low voltage sensor
-	waitTime      int8    = 15  // The time to wait before sending the next message
-	maxBrightness int8    = 100 // The maximum brightness of the LED
-	minBrightness int8    = 0   // The minimum brightness of the LED
-	stop          bool    = false
-	timeCounter   uint8   = 0
+	switchFunc  bool    = true
+	lSV         float32 // The value of the light sensor
+	highVoltage float32 // The value of the high voltage sensor
+	lowVoltage  float32 // The value of the high voltage sensor
+	// The value of the low voltage sensor
+	waitTime      int8  = 15  // The time to wait before sending the next message
+	maxBrightness int8  = 100 // The maximum brightness of the LED
+	minBrightness int8  = 0   // The minimum brightness of the LED
+	stop          bool  = false
+	timeCounter   uint8 = 0
 )
 
 func main() {
@@ -71,6 +72,9 @@ func mainProg(led machine.PWM, lS machine.ADC, hV machine.ADC, lV machine.ADC) {
 
 	highVoltage = ADCSensor(hV) // Read the high voltage sensor
 	lowVoltage = ADCSensor(lV)  // Read the low voltage sensor
+	println("lowVoltage: ", lowVoltage)
+	println("highVoltage: ", highVoltage)
+	println("lightSensorValue: ", lightSensorValue)
 
 	InitAT() //make sure the AT module is ready
 
@@ -91,7 +95,9 @@ func mainProg(led machine.PWM, lS machine.ADC, hV machine.ADC, lV machine.ADC) {
 		str = str[:2] + "0" + str[2:]
 	}
 
+	// deadLeds := (2.5 - lowVoltage) / 0.12
 	//fake temporary data percentage added in str
+	// str += strconv.FormatUint(uint64(deadLeds), 16)
 	str += strconv.FormatUint(uint64(54), 16)
 	if len(str) == 5 {
 		str = str[:4] + "0" + str[4:]
@@ -105,13 +111,4 @@ func mainProg(led machine.PWM, lS machine.ADC, hV machine.ADC, lV machine.ADC) {
 
 	println("str: ", str)
 	SendMessage(str) //send the message to the gateway
-}
-
-// string to hex
-func strToHex(str string) string {
-	var hex string
-	for _, char := range str {
-		hex += string(rune(uint16(char)))
-	}
-	return hex
 }
