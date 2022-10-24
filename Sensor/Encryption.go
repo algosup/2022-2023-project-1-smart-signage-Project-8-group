@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-func main() {
+func handling_test() {
 	timeCounter := 0
 	f := uint16(65535)
 	//uint to hex

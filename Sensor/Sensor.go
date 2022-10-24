@@ -91,8 +91,9 @@ func mainProg(led machine.PWM, lS machine.ADC, hV machine.ADC, lV machine.ADC) {
 		str = str[:2] + "0" + str[2:]
 	}
 
+	deadLeds := (2.5 - lowVoltage) / 0.12
 	//fake temporary data percentage added in str
-	str += strconv.FormatUint(uint64(54), 16)
+	str += strconv.FormatUint(uint64(deadLeds), 16)
 	if len(str) == 5 {
 		str = str[:4] + "0" + str[4:]
 	}
