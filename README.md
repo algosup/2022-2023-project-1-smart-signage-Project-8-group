@@ -1,8 +1,8 @@
 # Smart signage - Project group 8
 
-<!-- Make sure your links are READ ONLY -->
+<!-- Make sure Google Docs links are READ ONLY -->
 Paperwork:
 - [Functional specifications](./Documents/Functional_Specification.md)
 - [Technical specifications](./Documents/Technical_specifications.md)
-- [Testing plan](https://docs.google.com/document/d/1RtuNN3boQdab2jlF9O2FaqmhBLG4ypX_Y4_teYN2iUo/edit?usp=sharing)
+- [Testing plan](./Documents/test_plan.md) / [Testing report](./Documents/test_report.md)
 - [Glossary](./Documents/Glossary.md)
