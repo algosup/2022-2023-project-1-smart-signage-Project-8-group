@@ -68,8 +68,8 @@ func changeLight(inLight float32, maxBrightness int8, minBrightness int8) uint16
 	return val
 }
 
-func mainProg(lS uint16, hV uint16, lV uint16) (uint16, uint16, uint16, string) {
-	lSV := changeLight(ADCSensor(lS), 0, 100) // Get the value of the light sensor
+func mainProg(lS uint16, hV uint16, lV uint16, timeCounter uint8) (uint16, uint16, uint16, string) {
+	lSV := changeLight(ADCSensor(lS), 100, 0) // Get the value of the light sensor
 
 	hVV := uint16(ADCSensor(hV)) // Read the high voltage sensor
 	lVV := uint16(ADCSensor(lV)) // Read the low voltage sensor
@@ -80,13 +80,13 @@ func mainProg(lS uint16, hV uint16, lV uint16) (uint16, uint16, uint16, string) 
 		str = "0" + str
 	}
 
-	/*if lSV != 0 {
-		timeCounter++
+	if lSV != 0 {
+
 		if timeCounter == 255 {
 			timeCounter = 0
 		}
 		str += strconv.FormatUint(uint64(timeCounter), 16)
-	}*/
+	}
 	if len(str) == 3 {
 		str = str[:2] + "0" + str[2:]
 	}
