@@ -105,12 +105,3 @@ func mainProg(lS uint16, hV uint16, lV uint16, timeCounter uint8) (uint16, uint1
 
 	return lSV, hVV, lVV, str
 }
-
-// string to hex
-func strToHex(str string) string {
-	var hex string
-	for _, char := range str {
-		hex += string(rune(uint16(char)))
-	}
-	return hex
-}

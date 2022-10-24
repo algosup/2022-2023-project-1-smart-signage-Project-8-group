@@ -99,3 +99,52 @@ func TestMainProg(t *testing.T) {
 		}
 	})
 }
+
+func TestSendMessage(t *testing.T) {
+	t.Run("test SendMessage()", func(t *testing.T) {
+		e := `AT+MSG= "00360"` + "\r\n"
+		result := SendMessage("00360")
+		if result != e {
+			t.Errorf("expected %v, got %v", e, result)
+		}
+	})
+
+	t.Run("test SendMessage()", func(t *testing.T) {
+		e := `AT+MSG= "500c3600"` + "\r\n"
+		result := SendMessage("500c3600")
+		if result != e {
+			t.Errorf("expected %v, got %v", e, result)
+		}
+	})
+}
+
+func TestSendMessage(t *testing.T) {
+	t.Run("test SendMessage()", func(t *testing.T) {
+		e := `AT+MSG= "00360"` + "\r\n"
+		result := SendMessage("00360")
+		if result != e {
+			t.Errorf("expected %v, got %v", e, result)
+		}
+	})
+
+	t.Run("test SendMessage()", func(t *testing.T) {
+		e := `AT+MSG= "500c3600"` + "\r\n"
+		result := SendMessage("500c3600")
+		if result != e {
+			t.Errorf("expected %v, got %v", e, result)
+		}
+	})
+}
+
+func TestMsgTreating(t *testing.T) {
+	t.Run("test msgTreating()", func(t *testing.T) {
+		e1 := false
+		e2 := false
+		e3 := false
+		e4 := false
+		r1, r2, r3, r4 := SendMessage("01")
+		if r1 != e1 {
+			t.Errorf("expected %v, got %v", e1, r1)
+		}
+	})
+}

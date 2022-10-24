@@ -1,7 +1,7 @@
 package main
 
 var (
-//earlyStop bool = false
+// earlyStop bool = false
 )
 
 // Initialize the AT module
@@ -18,12 +18,9 @@ func InitAT() {
 }*/
 
 // Send a message to the serial port of the lora module with the given payload
-func SendMessage(payload string, e error) string {
-	println("Sending message...")
-	a, err := string([]byte(`AT+MSG= "`+payload+`"`+"\r\n")), e
-	if err != nil {
-		return ("Error: " + err.Error())
-	}
+func SendMessage(payload string) string {
+	//println("Sending message...")
+	a := string([]byte(`AT+MSG= "` + payload + `"` + "\r\n"))
 	return a
 }
 
@@ -68,25 +65,25 @@ func ReadMessage(wT int8, UART0Buff int, UART0Read byte) string {
 */
 
 func msgTreating(msg string) (bool, bool, int8, int8) {
-	println("treating...")
-	println(msg)
+	//println("treating...")
+	//println(msg)
 	var st bool
 	//msg is 2 bytes long, take first byte and take the first bit if it's 0, turn off the led, if it's 1 turn on the led
 	if (msg[0] & 0x80) == 0 {
-		println("turn off")
+		//println("turn off")
 		st = true
 	} else {
-		println("turn on")
+		//println("turn on")
 		st = false
 	}
 
 	var est bool
 	//take second bit and if true earlyStop = true
 	if (msg[0] & 0x40) == 0 {
-		println("earlyStop = false")
+		//println("earlyStop = false")
 		est = false
 	} else {
-		println("earlyStop = true")
+		//println("earlyStop = true")
 		est = true
 	}
 
