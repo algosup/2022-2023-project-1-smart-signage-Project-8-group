@@ -51,7 +51,7 @@ func main() {
 }
 
 // Handle the ADC sensors and return the value in volts (float32)
-func ADCSensor(adc int16) float32 {
+func ADCSensor(adc uint16) float32 {
 	ui := adc
 	return (float32(ui) / 65535.0) * 5.0
 }
@@ -68,7 +68,7 @@ func changeLight(inLight float32, maxBrightness int8, minBrightness int8) uint16
 	return val
 }
 
-func mainProg(lS int16, hV int16, lV int16) (uint16, uint16, uint16, string) {
+func mainProg(lS uint16, hV uint16, lV uint16) (uint16, uint16, uint16, string) {
 	lSV := changeLight(ADCSensor(lS), 0, 100) // Get the value of the light sensor
 
 	hVV := uint16(ADCSensor(hV)) // Read the high voltage sensor

@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/base64"
+	"math"
 )
 
 /*
@@ -43,4 +44,9 @@ func handling_test() {
 
 func toBase64(str string) string {
 	return base64.StdEncoding.EncodeToString([]byte(str))
+}
+
+func roundFloat(val float64, precision uint) float64 {
+	ratio := math.Pow(10, float64(precision))
+	return math.Round(val*ratio) / ratio
 }
