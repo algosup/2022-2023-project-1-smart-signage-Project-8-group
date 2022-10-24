@@ -5,15 +5,17 @@ import (
 )
 
 var (
-	switchFunc    bool    = true
-	lSV           float32       // The value of the light sensor
-	highVoltage   float32       // The value of the high voltage sensor
-	lowVoltage    float32       // The value of the low voltage sensor
-	waitTime      int8    = 15  // The time to wait before sending the next message
-	maxBrightness int8    = 100 // The maximum brightness of the LED
-	minBrightness int8    = 0   // The minimum brightness of the LED
-	stop          bool    = false
-	timeCounter   uint8   = 0
+/*
+switchFunc    bool    = true
+lSV           float32       // The value of the light sensor
+highVoltage   float32       // The value of the high voltage sensor
+lowVoltage    float32       // The value of the low voltage sensor
+waitTime      int8    = 15  // The time to wait before sending the next message
+maxBrightness int8    = 100 // The maximum brightness of the LED
+minBrightness int8    = 0   // The minimum brightness of the LED
+stop          bool    = false
+timeCounter   uint8   = 0
+*/
 )
 
 func main() {
@@ -55,7 +57,7 @@ func ADCSensor(adc int16) float32 {
 }
 
 // Handle the PWM LED and set the brightness based on the light sensor value
-func changeLight(inLight float32) uint16 {
+func changeLight(inLight float32, maxBrightness int8, minBrightness int8) uint16 {
 	//return percentage of inLight out of 65535
 	val := uint16(((5 - inLight) * 20) * 65535 / 100)
 	if val > uint16(float32(65535)/100*float32(maxBrightness)) {
@@ -67,7 +69,7 @@ func changeLight(inLight float32) uint16 {
 }
 
 func mainProg(lS int16, hV int16, lV int16) (uint16, uint16, uint16, string) {
-	lSV := changeLight(ADCSensor(lS)) // Get the value of the light sensor
+	lSV := changeLight(ADCSensor(lS), 0, 100) // Get the value of the light sensor
 
 	hVV := uint16(ADCSensor(hV)) // Read the high voltage sensor
 	lVV := uint16(ADCSensor(lV)) // Read the low voltage sensor
@@ -78,13 +80,13 @@ func mainProg(lS int16, hV int16, lV int16) (uint16, uint16, uint16, string) {
 		str = "0" + str
 	}
 
-	if lSV != 0 {
+	/*if lSV != 0 {
 		timeCounter++
 		if timeCounter == 255 {
 			timeCounter = 0
 		}
 		str += strconv.FormatUint(uint64(timeCounter), 16)
-	}
+	}*/
 	if len(str) == 3 {
 		str = str[:2] + "0" + str[2:]
 	}

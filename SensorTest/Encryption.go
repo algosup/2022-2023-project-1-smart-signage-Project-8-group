@@ -2,10 +2,10 @@ package main
 
 import (
 	"encoding/base64"
-	"strconv"
 )
 
-func main() {
+/*
+func handling_test() {
 	timeCounter := 0
 	f := uint16(65535)
 	//uint to hex
@@ -39,7 +39,7 @@ func main() {
 
 	println("str: ", str)
 	println("base64: ", toBase64(str))
-}
+}*/
 
 func toBase64(str string) string {
 	return base64.StdEncoding.EncodeToString([]byte(str))
