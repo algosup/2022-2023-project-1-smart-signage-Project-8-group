@@ -10,16 +10,17 @@ var (
 )
 
 // Initialize the AT module
+/* Non testable
 func InitAT() {
 	println("Initializing AT...")
 	time.Sleep(time.Millisecond * 50)
-	machine.UART0.Configure(machine.UARTConfig{BaudRate: 9600, TX: machine.D1, RX: machine.D0})
+	(machine.UARTConfig{BaudRate: 9600, TX: machine.D1, RX: machine.D0})
 	_, err := machine.UART0.Write([]byte("AT+JOIN=DR3\r\n"))
 	if err != nil {
 		println("Error: " + err.Error())
 	}
 	ReadMessage(1)
-}
+}*/
 
 // Send a message to the serial port of the lora module with the given payload
 func SendMessage(payload string, e error) string {
@@ -32,7 +33,7 @@ func SendMessage(payload string, e error) string {
 }
 
 // Read the serial port of the lora module and return the message
-func ReadMessage(wT int8) string {
+func ReadMessage(wT int8, UART0Buff int, UART0Read byte) string {
 	var msg string
 	timer := 0
 	msg1 := ""
@@ -40,13 +41,8 @@ func ReadMessage(wT int8) string {
 		if timer >= int(wT)*60*1000 || earlyStop {
 			return ""
 		}
-		if machine.UART0.Buffered() > 0 {
-			rb, err := machine.UART0.ReadByte()
-			if err != nil {
-				println("Error: " + err.Error())
-				continue
-				// return ""
-			}
+		if UART0Buff > 0 {
+			rb := UART0Read
 			msg1 += string(rb)
 			if msg1[len(msg1)-1] == '\n' {
 				msg = msg1
@@ -74,29 +70,32 @@ func ReadMessage(wT int8) string {
 	}
 }
 
-func msgTreating(msg string) {
+func msgTreating(msg string) (bool, bool, int8, int8) {
 	println("treating...")
 	println(msg)
+	var st bool
 	//msg is 2 bytes long, take first byte and take the first bit if it's 0, turn off the led, if it's 1 turn on the led
 	if (msg[0] & 0x80) == 0 {
 		println("turn off")
-		stop = true
+		st = true
 	} else {
 		println("turn on")
-		stop = false
+		st = false
 	}
 
+	var est bool
 	//take second bit and if true earlyStop = true
 	if (msg[0] & 0x40) == 0 {
 		println("earlyStop = false")
-		earlyStop = false
+		est = false
 	} else {
 		println("earlyStop = true")
-		earlyStop = true
+		est = true
 	}
 
-	maxBrightness, minBrightness = bitsManager(msg[1])
+	maxB, minB := bitsManager(msg[1])
 
+	return st, est, maxB, minB
 }
 
 func bitsManager(num uint8) (int8, int8) {
