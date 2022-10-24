@@ -33,10 +33,16 @@ func SendMessage(payload string) {
 
 // Read the serial port of the lora module and return the message
 func ReadMessage(wT int8) string {
+	led := machine.PWM{Pin: machine.D3}  // D3 is the pin for PWM ~3
+	lS := machine.ADC{Pin: machine.ADC0} // A2 is the pin for the light sensor A2
+
+	led.Configure()
 	var msg string
 	timer := 0
 	msg1 := ""
 	for {
+		lightSensorValue := changeLight(ADCSensor(lS)) // Get the value of the light sensor
+		led.Set(lightSensorValue)                      // Change the LED brightness based on the light sensor value
 		if timer >= int(wT)*60*1000 || earlyStop {
 			return ""
 		}
