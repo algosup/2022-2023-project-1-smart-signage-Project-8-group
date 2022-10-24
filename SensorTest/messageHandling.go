@@ -1,16 +1,11 @@
 package main
 
-import (
-	"strings"
-	"time"
-)
-
 var (
 	earlyStop bool = false
 )
 
 // Initialize the AT module
-/* Non testable
+/* Non unitTest compatible
 func InitAT() {
 	println("Initializing AT...")
 	time.Sleep(time.Millisecond * 50)
@@ -33,6 +28,7 @@ func SendMessage(payload string, e error) string {
 }
 
 // Read the serial port of the lora module and return the message
+/* Non unitTest compatible
 func ReadMessage(wT int8, UART0Buff int, UART0Read byte) string {
 	var msg string
 	timer := 0
@@ -69,6 +65,7 @@ func ReadMessage(wT int8, UART0Buff int, UART0Read byte) string {
 		}
 	}
 }
+*/
 
 func msgTreating(msg string) (bool, bool, int8, int8) {
 	println("treating...")

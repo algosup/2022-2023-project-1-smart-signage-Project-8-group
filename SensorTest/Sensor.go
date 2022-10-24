@@ -1,7 +1,6 @@
 package main
 
 import (
-	"machine"
 	"strconv"
 )
 
@@ -18,38 +17,40 @@ var (
 )
 
 func main() {
-	machine.InitPWM()
-	machine.InitADC()
-	lS := machine.ADC{Pin: machine.ADC0} // A2 is the pin for the light sensor A2
-	hV := machine.ADC{Pin: machine.ADC4} // A4 is the pin for the high voltage sensor A4
-	lV := machine.ADC{Pin: machine.ADC5} // A5 is the pin for the low voltage sensor A5
-	led := machine.PWM{Pin: machine.D3}  // D3 is the pin for PWM ~3
+	/*
+		machine.InitPWM()
+		machine.InitADC()
+		lS := machine.ADC{Pin: machine.ADC0} // A2 is the pin for the light sensor A2
+		hV := machine.ADC{Pin: machine.ADC4} // A4 is the pin for the high voltage sensor A4
+		lV := machine.ADC{Pin: machine.ADC5} // A5 is the pin for the low voltage sensor A5
+		led := machine.PWM{Pin: machine.D3}  // D3 is the pin for PWM ~3
 
-	led.Configure()                   // Configure the PWM LED
-	lS.Configure(machine.ADCConfig{}) // Configure the ADC light sensor
-	hV.Configure(machine.ADCConfig{}) // Configure the ADC high voltage sensor
-	lV.Configure(machine.ADCConfig{}) // Configure the ADC low voltage sensor
+		led.Configure()                   // Configure the PWM LED
+		lS.Configure(machine.ADCConfig{}) // Configure the ADC light sensor
+		hV.Configure(machine.ADCConfig{}) // Configure the ADC high voltage sensor
+		lV.Configure(machine.ADCConfig{}) // Configure the ADC low voltage sensor
 
-	//main loop
-	for {
-		if switchFunc && !stop {
-			println("begin")
-			mainProg(led, lS, hV, lV)
-			switchFunc = false
-		} else {
-			if stop {
-				led.Set(0)
+		//main loop
+		for {
+			if switchFunc && !stop {
+				println("begin")
+				mainProg(led, lS, hV, lV)
+				switchFunc = false
+			} else {
+				if stop {
+					led.Set(0)
+				}
+				println("begin 2")
+				ReadMessage(waitTime + 1)
+				switchFunc = true
 			}
-			println("begin 2")
-			ReadMessage(waitTime + 1)
-			switchFunc = true
 		}
-	}
+	*/
 }
 
 // Handle the ADC sensors and return the value in volts (float32)
-func ADCSensor(adc machine.ADC) float32 {
-	ui := adc.Get()
+func ADCSensor(adc int16) float32 {
+	ui := adc
 	return (float32(ui) / 65535.0) * 5.0
 }
 
@@ -65,22 +66,19 @@ func changeLight(inLight float32) uint16 {
 	return val
 }
 
-func mainProg(led machine.PWM, lS machine.ADC, hV machine.ADC, lV machine.ADC) {
-	lightSensorValue := changeLight(ADCSensor(lS)) // Get the value of the light sensor
-	led.Set(lightSensorValue)                      // Change the LED brightness based on the light sensor value
+func mainProg(lS int16, hV int16, lV int16) (uint16, uint16, uint16, string) {
+	lSV := changeLight(ADCSensor(lS)) // Get the value of the light sensor
 
-	highVoltage = ADCSensor(hV) // Read the high voltage sensor
-	lowVoltage = ADCSensor(lV)  // Read the low voltage sensor
-
-	InitAT() //make sure the AT module is ready
+	hVV := uint16(ADCSensor(hV)) // Read the high voltage sensor
+	lVV := uint16(ADCSensor(lV)) // Read the low voltage sensor
 
 	//uint to hex
-	str := strconv.FormatUint(uint64(float32(lightSensorValue)/65535*100), 16) //create percentage of light sensor value and return it in string hex format
+	str := strconv.FormatUint(uint64(float32(lSV)/65535*100), 16) //create percentage of light sensor value and return it in string hex format
 	if len(str) == 1 {
 		str = "0" + str
 	}
 
-	if lightSensorValue != 0 {
+	if lSV != 0 {
 		timeCounter++
 		if timeCounter == 255 {
 			timeCounter = 0
@@ -103,8 +101,7 @@ func mainProg(led machine.PWM, lS machine.ADC, hV machine.ADC, lV machine.ADC) {
 		str = str[:6] + "0" + str[6:]
 	}
 
-	println("str: ", str)
-	SendMessage(str) //send the message to the gateway
+	return lSV, hVV, lVV, str
 }
 
 // string to hex
