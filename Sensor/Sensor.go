@@ -54,14 +54,6 @@ func ADCSensor(adc machine.ADC) float32 {
 	return (float32(ui) / 65535.0) * 5.0
 }
 
-func ADCSensorRaw(adc machine.ADC) uint16 {
-	var ui float32
-	for i := 0; i < 100; i++ {
-		ui += float32(adc.Get())
-	}
-	return uint16(ui / 100)
-}
-
 // Handle the PWM LED and set the brightness based on the light sensor value
 func changeLight(inLight float32) uint16 {
 	//return percentage of inLight out of 65535
@@ -119,13 +111,4 @@ func mainProg(led machine.PWM, lS machine.ADC, hV machine.ADC, lV machine.ADC) {
 
 	println("str: ", str)
 	SendMessage(str) //send the message to the gateway
-}
-
-// string to hex
-func strToHex(str string) string {
-	var hex string
-	for _, char := range str {
-		hex += string(rune(uint16(char)))
-	}
-	return hex
 }
