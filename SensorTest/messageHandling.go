@@ -1,7 +1,7 @@
 package main
 
 var (
-	earlyStop bool = false
+//earlyStop bool = false
 )
 
 // Initialize the AT module
