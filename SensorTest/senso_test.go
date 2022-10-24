@@ -59,11 +59,11 @@ func TestChangeLight(t *testing.T) {
 func TestMainProg(t *testing.T) {
 	t.Run("test MainProg()", func(t *testing.T) {
 		e1 := uint16(0)
-		e2 := uint16(3)
-		e3 := uint16(0)
+		e2 := uint16(1)
+		e3 := uint16(1)
 		e4 := "00360"
 
-		r1, r2, r3, r4 := mainProg(uint16(32767), uint16(40000), uint16(4000))
+		r1, r2, r3, r4 := mainProg(uint16(65535), uint16(21000), uint16(20000), uint8(122))
 		if r1 != e1 {
 			t.Errorf("expected %v, got %v", e1, r1)
 		}
@@ -79,12 +79,12 @@ func TestMainProg(t *testing.T) {
 	})
 
 	t.Run("test MainProg()", func(t *testing.T) {
-		e1 := uint16(0)
-		e2 := uint16(2)
-		e3 := uint16(2)
-		e4 := "00360"
+		e1 := uint16(52913)
+		e2 := uint16(1)
+		e3 := uint16(4)
+		e4 := "500c3600"
 
-		r1, r2, r3, r4 := mainProg(uint16(0), uint16(30000), uint16(30000))
+		r1, r2, r3, r4 := mainProg(uint16(12622), uint16(25000), uint16(65000), uint8(12))
 		if r1 != e1 {
 			t.Errorf("expected %v, got %v", e1, r1)
 		}
