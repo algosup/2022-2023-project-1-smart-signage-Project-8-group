@@ -16,33 +16,33 @@
 - name: secondary connection
 - description: test the connection between the LoRa and the LEDS
 - want: the LoRa and the LED connect
-- get:
-- result:
-- comment:
+- get: we can turn on and off the LEDs
+- result: positive
+- comment: we use a XY-MOS in order to turn on and off the LEDs
 
 ### test n°3
 
 - name: additional connection
-- description: test an additionnal connection between the LoRa and ...
-- want: the LoRa and the ... connect
-- get:
-- result:
-- comment:
+- description: test an additionnal connection between the LoRa and a arduino uno
+- want: the LoRa and the arduino uno connect
+- get: the LEDs on the arduino lights up
+- result: positive
+- comment: the arduino uno will be controlling most of the modules used during the project
 
 ### test n°4
 
 - name: sensor n°1
 - description: check if the light sensor is working
 - want: light sensor is working
-- get:
-- result:
-- comment:
+- get: the value is changing wether the sensor is hidden or not
+- result: positive
+- comment: this sensor will be used to tell if we need to dim the LEDs or not
 
 ### test n°5
 
 - name: sensor n°2
-- description: check if the heat sensor is working
-- want: heat sensor is working
+- description: check if the high current sensor is working
+- want: hight current is working
 - get:
 - result:
 - comment:
@@ -50,31 +50,22 @@
 ### test n°6
 
 - name: sensor n°3
-- description: check if the high current sensor is working
-- want: hight current is working
-- get:
-- result:
-- comment:
-
-### test n°7
-
-- name: sensor n°4
 - description: check if the low current sensor is working
 - want: low current sensor is working
 - get:
 - result:
 - comment:
 
-### test n°8
+### test n°7
 
-- name: output n°2
+- name: output n°1
 - description: check if the report output works
 - want: we have a report
 - get:
 - result:
 - comment:
 
-### test n°9
+### test n°8
 
 - name: input n°1
 - read data from server if available
@@ -83,7 +74,7 @@
 - result:
 - comment:
 
-### test n°10
+### test n°9
 
 - name: input n°2
 - description: Gather sensor data
@@ -91,7 +82,7 @@
 - get:
 - comment
 
-### test n°11
+### test n°10
 
 - name: input n°3
 - descrition: Set data to match freshly gathered information (from downlink and sensors)
@@ -100,7 +91,7 @@
 - result:
 - comment:
 
-### test n°12
+### test n°11
 
 - name: input n°4
 - descrition: Turns leds on and off depending on available data
@@ -109,7 +100,7 @@
 - result:
 - comment:
 
-### test n°13
+### test n°12
 
 - name: input n°5
 - description: Send report to the server trough the LoRaWan network
@@ -118,7 +109,7 @@
 - result:
 - comment:  
 
-### test n°14
+### test n°13
 
 - name: input n°6
 - description: Read the input from the ZMCT103C module to learn if the LEDs are powered or not
@@ -126,22 +117,18 @@
 - get:
 - comment:
 
-### test n°15
+### test n°14
 
 - name: input n°7
 - description: Read the ambient light level using a photoresistor via a percentage
 - want: get a percentage indicating ambient light level
 - get:
-<<<<<<< Updated upstream
-- result:
-=======
 - comment:
 
-### test n°16
+### test n°15
 
 - name: input n°8
 - description: Approximates LED status using output from a ACS712 low voltage sensor
 - want: an approximation of the LEDs status
 - get:
->>>>>>> Stashed changes
 - comment:
