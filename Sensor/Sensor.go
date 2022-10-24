@@ -9,7 +9,7 @@ var (
 	switchFunc    bool    = true
 	lSV           float32       // The value of the light sensor
 	highVoltage   float32       // The value of the high voltage sensor
-	lowVoltage    float32       // The value of the low voltage sensor
+	lowVoltage    uint16        // The value of the low voltage sensor
 	waitTime      int8    = 15  // The time to wait before sending the next message
 	maxBrightness int8    = 100 // The maximum brightness of the LED
 	minBrightness int8    = 0   // The minimum brightness of the LED
@@ -53,6 +53,14 @@ func ADCSensor(adc machine.ADC) float32 {
 	return (float32(ui) / 65535.0) * 5.0
 }
 
+func ADCSensorRaw(adc machine.ADC) uint16 {
+	var ui float32
+	for i := 0; i < 100; i++ {
+		ui += float32(adc.Get())
+	}
+	return uint16(ui / 100)
+}
+
 // Handle the PWM LED and set the brightness based on the light sensor value
 func changeLight(inLight float32) uint16 {
 	//return percentage of inLight out of 65535
@@ -69,8 +77,13 @@ func mainProg(led machine.PWM, lS machine.ADC, hV machine.ADC, lV machine.ADC) {
 	lightSensorValue := changeLight(ADCSensor(lS)) // Get the value of the light sensor
 	led.Set(lightSensorValue)                      // Change the LED brightness based on the light sensor value
 
-	highVoltage = ADCSensor(hV) // Read the high voltage sensor
-	lowVoltage = ADCSensor(lV)  // Read the low voltage sensor
+	highVoltage = ADCSensor(hV)   // Read the high voltage sensor
+	lowVoltage = ADCSensorRaw(lV) // Read the low voltage sensor
+	println("low: ", lowVoltage)
+	println("highVoltage: ", highVoltage)
+	println("lowVoltage: ", ADCSensor(lV))
+	println("lightSensorValue: ", lightSensorValue)
+	println("lightSensorValue: ", ADCSensor(lS))
 
 	InitAT() //make sure the AT module is ready
 
@@ -91,9 +104,10 @@ func mainProg(led machine.PWM, lS machine.ADC, hV machine.ADC, lV machine.ADC) {
 		str = str[:2] + "0" + str[2:]
 	}
 
-	deadLeds := (2.5 - lowVoltage) / 0.12
+	// deadLeds := (2.5 - lowVoltage) / 0.12
 	//fake temporary data percentage added in str
-	str += strconv.FormatUint(uint64(deadLeds), 16)
+	// str += strconv.FormatUint(uint64(deadLeds), 16)
+	str += strconv.FormatUint(uint64(54), 16)
 	if len(str) == 5 {
 		str = str[:4] + "0" + str[4:]
 	}
