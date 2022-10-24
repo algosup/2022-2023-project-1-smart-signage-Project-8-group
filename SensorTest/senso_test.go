@@ -77,4 +77,25 @@ func TestMainProg(t *testing.T) {
 			t.Errorf("expected %v, got %v", e4, r4)
 		}
 	})
+
+	t.Run("test MainProg()", func(t *testing.T) {
+		e1 := uint16(0)
+		e2 := uint16(2)
+		e3 := uint16(2)
+		e4 := "00360"
+
+		r1, r2, r3, r4 := mainProg(uint16(0), uint16(30000), uint16(30000))
+		if r1 != e1 {
+			t.Errorf("expected %v, got %v", e1, r1)
+		}
+		if r2 != e2 {
+			t.Errorf("expected %v, got %v", e2, r2)
+		}
+		if r3 != e3 {
+			t.Errorf("expected %v, got %v", e3, r3)
+		}
+		if r4 != e4 {
+			t.Errorf("expected %v, got %v", e4, r4)
+		}
+	})
 }
