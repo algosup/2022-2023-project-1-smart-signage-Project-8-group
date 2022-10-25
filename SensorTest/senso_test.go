@@ -136,6 +136,7 @@ func TestSendMessage(t *testing.T) {
 	})
 }
 
+/*
 func TestMsgTreating(t *testing.T) {
 	t.Run("test msgTreating()", func(t *testing.T) {
 		e1 := false
@@ -147,4 +148,4 @@ func TestMsgTreating(t *testing.T) {
 			t.Errorf("expected %v, got %v", e1, r1)
 		}
 	})
-}
+}*/
