@@ -1,41 +1,58 @@
 package main
 
+import (
+	"machine"
+	"strings"
+	"time"
+)
+
 var (
-// earlyStop bool = false
+	earlyStop bool = false
 )
 
 // Initialize the AT module
-/* Non unitTest compatible
 func InitAT() {
 	println("Initializing AT...")
 	time.Sleep(time.Millisecond * 50)
-	(machine.UARTConfig{BaudRate: 9600, TX: machine.D1, RX: machine.D0})
+	machine.UART0.Configure(machine.UARTConfig{BaudRate: 9600, TX: machine.D1, RX: machine.D0})
 	_, err := machine.UART0.Write([]byte("AT+JOIN=DR3\r\n"))
 	if err != nil {
 		println("Error: " + err.Error())
 	}
 	ReadMessage(1)
-}*/
+}
 
 // Send a message to the serial port of the lora module with the given payload
-func SendMessage(payload string) string {
-	//println("Sending message...")
-	a := string([]byte(`AT+MSG= "` + payload + `"` + "\r\n"))
-	return a
+func SendMessage(payload string) {
+	println("Sending message...")
+	_, err := machine.UART0.Write([]byte(`AT+MSG= "` + payload + `"` + "\r\n"))
+	if err != nil {
+		println("Error: " + err.Error())
+	}
 }
 
 // Read the serial port of the lora module and return the message
-/* Non unitTest compatible
-func ReadMessage(wT int8, UART0Buff int, UART0Read byte) string {
+func ReadMessage(wT int8) string {
+	led := machine.PWM{Pin: machine.D3}  // D3 is the pin for PWM ~3
+	lS := machine.ADC{Pin: machine.ADC0} // A2 is the pin for the light sensor A2
+
+	led.Configure()
 	var msg string
 	timer := 0
 	msg1 := ""
 	for {
+		lightSensorValue := changeLight(ADCSensor(lS)) // Get the value of the light sensor
+		led.Set(lightSensorValue)                      // Change the LED brightness based on the light sensor value
 		if timer >= int(wT)*60*1000 || earlyStop {
 			return ""
 		}
-		if UART0Buff > 0 {
-			rb := UART0Read
+		if machine.UART0.Buffered() > 0 {
+			rb, err := machine.UART0.ReadByte()
+			if err != nil {
+				println("Error: " + err.Error())
+				continue
+				// return ""
+			}
 			msg1 += string(rb)
 			if msg1[len(msg1)-1] == '\n' {
 				msg = msg1
@@ -62,34 +79,30 @@ func ReadMessage(wT int8, UART0Buff int, UART0Read byte) string {
 		}
 	}
 }
-*/
 
-func msgTreating(msg string) (bool, bool, int8, int8) {
-	//println("treating...")
-	//println(msg)
-	var st bool
+func msgTreating(msg string) {
+	println("treating...")
+	println(msg)
 	//msg is 2 bytes long, take first byte and take the first bit if it's 0, turn off the led, if it's 1 turn on the led
 	if (msg[0] & 0x80) == 0 {
-		//println("turn off")
-		st = true
+		println("turn off")
+		stop = true
 	} else {
-		//println("turn on")
-		st = false
+		println("turn on")
+		stop = false
 	}
 
-	var est bool
 	//take second bit and if true earlyStop = true
 	if (msg[0] & 0x40) == 0 {
-		//println("earlyStop = false")
-		est = false
+		println("earlyStop = false")
+		earlyStop = false
 	} else {
-		//println("earlyStop = true")
-		est = true
+		println("earlyStop = true")
+		earlyStop = true
 	}
 
-	maxB, minB := bitsManager(msg[1])
+	maxBrightness, minBrightness = bitsManager(msg[1])
 
-	return st, est, maxB, minB
 }
 
 func bitsManager(num uint8) (int8, int8) {
