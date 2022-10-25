@@ -106,7 +106,7 @@ func msgTreating(msg string) {
 		println("earlyStop = true")
 		earlyStop = true
 	}
-	bytearray := msg[2:3]
+	bytearray := msg[2:]
 	maxBrightness, minBrightness = bitsManager(hex.EncodeToString([]byte(bytearray)))
 
 }
