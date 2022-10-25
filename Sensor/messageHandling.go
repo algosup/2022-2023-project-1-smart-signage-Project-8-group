@@ -80,11 +80,16 @@ func ReadMessage(wT int8) string {
 	}
 }
 
+// handling received message
 func msgTreating(msg string) {
 	println("treating...")
 	println(msg)
-	//msg is 2 bytes long, take first byte and take the first bit if it's 0, turn off the led, if it's 1 turn on the led
-	if (msg[0] & 0x80) == 0 {
+	if len(msg) < 2 {
+		return
+	}
+	str := Hex2Bin(msg[0])
+	//msg is 2 bytes long, take first byte from str and take the last bit if it's 0, turn off the led, if it's 1 turn on the led
+	if str[7] == '0' {
 		println("turn off")
 		stop = true
 	} else {
@@ -93,7 +98,7 @@ func msgTreating(msg string) {
 	}
 
 	//take second bit and if true earlyStop = true
-	if (msg[0] & 0x40) == 0 {
+	if str[6] == '1' {
 		println("earlyStop = false")
 		earlyStop = false
 	} else {
@@ -129,4 +134,13 @@ func separateInt(num uint8) (int8, int8) {
 	arr = num >> 4
 	arr1 = num & 0x0F
 	return int8(arr), int8(arr1)
+}
+
+func Hex2Bin(in byte) string {
+	var out []byte
+	for i := 7; i >= 0; i-- {
+		b := (in >> uint(i))
+		out = append(out, (b%2)+48)
+	}
+	return string(out)
 }
