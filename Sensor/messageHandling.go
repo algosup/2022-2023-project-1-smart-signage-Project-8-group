@@ -80,6 +80,7 @@ func ReadMessage(wT int8) string {
 	}
 }
 
+// handling received message
 func msgTreating(msg string) {
 	println("treating...")
 	println(msg)
