@@ -26,10 +26,11 @@ func main() {
 	lV := machine.ADC{Pin: machine.ADC5} // A5 is the pin for the low voltage sensor A5
 	led := machine.PWM{Pin: machine.D3}  // D3 is the pin for PWM ~3
 
-	led.Configure()                   // Configure the PWM LED
-	lS.Configure(machine.ADCConfig{}) // Configure the ADC light sensor
-	hV.Configure(machine.ADCConfig{}) // Configure the ADC high voltage sensor
-	lV.Configure(machine.ADCConfig{}) // Configure the ADC low voltage sensor
+	led.Configure() // Configure the PWM LED
+	//input mode
+	lS.Configure(machine.ADCConfig{Reference: 5})  // Configure the ADC light sensor
+	hV.Configure(machine.ADCConfig{Reference: 12}) // Configure the ADC high voltage sensor
+	lV.Configure(machine.ADCConfig{Reference: 5})  // Configure the ADC low voltage sensor
 
 	//main loop
 	for {
@@ -42,7 +43,7 @@ func main() {
 				led.Set(0)
 			}
 			println("begin 2")
-			ReadMessage(waitTime + 1)
+			ReadMessage(waitTime+1, 0)
 			switchFunc = true
 		}
 	}
@@ -51,7 +52,7 @@ func main() {
 // Handle the ADC sensors and return the value in volts (float32)
 func ADCSensor(adc machine.ADC) float32 {
 	ui := adc.Get()
-	return (float32(ui) / 65535.0) * 5.0
+	return (float32(ui) / 65535.0)
 }
 
 // Handle the PWM LED and set the brightness based on the light sensor value
@@ -67,11 +68,11 @@ func changeLight(inLight float32) uint16 {
 }
 
 func mainProg(led machine.PWM, lS machine.ADC, hV machine.ADC, lV machine.ADC) {
-	lightSensorValue := changeLight(ADCSensor(lS)) // Get the value of the light sensor
-	led.Set(lightSensorValue)                      // Change the LED brightness based on the light sensor value
+	lightSensorValue := changeLight(((ADCSensor(lS) * 5.0) - 2.5) * 2) // Get the value of the light sensor
+	led.Set(lightSensorValue)                                          // Change the LED brightness based on the light sensor value
 
-	highVoltage = ADCSensor(hV) // Read the high voltage sensor
-	lowVoltage = ADCSensor(lV)  // Read the low voltage sensor
+	highVoltage = ADCSensor(hV) * 12.0 // Read the high voltage sensor
+	lowVoltage = ADCSensor(lV) * 5.0   // Read the low voltage sensor
 	println("lowVoltage: ", lowVoltage)
 	println("highVoltage: ", highVoltage)
 	println("lightSensorValue: ", lightSensorValue)
