@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/hex"
 	"machine"
 	"strings"
 	"time"
@@ -84,7 +85,7 @@ func ReadMessage(wT int8) string {
 func msgTreating(msg string) {
 	println("treating...")
 	println(msg)
-	if len(msg) < 2 {
+	if len(msg) < 4 {
 		return
 	}
 	str := Hex2Bin(msg[0])
@@ -105,13 +106,20 @@ func msgTreating(msg string) {
 		println("earlyStop = true")
 		earlyStop = true
 	}
-
-	maxBrightness, minBrightness = bitsManager(msg[1])
+	bytearray := msg[2:3]
+	maxBrightness, minBrightness = bitsManager(hex.EncodeToString([]byte(bytearray)))
 
 }
 
-func bitsManager(num uint8) (int8, int8) {
-	a, b := separateInt(num)
+func bitsManager(num string) (int8, int8) {
+	//take two first bytes num[0:1] and convert them to int8 without parseint
+	a := int8(num[0])
+	a2 := int8(num[1])
+	a = a + a2*10 - 30
+	b := int8(num[2])
+	b2 := int8(num[3])
+	b = b + b2*10 - 30
+
 	if a < b {
 		b = a
 	}
@@ -121,19 +129,7 @@ func bitsManager(num uint8) (int8, int8) {
 	if a > 10 {
 		a = 10
 	}
-	println("maxBrightness: ", a*10)
-	println("minBrightness: ", b*10)
-	return a * 10, b * 10
-}
-
-// func to separate an int into 2 array of 4 bits
-func separateInt(num uint8) (int8, int8) {
-	// separate the number into 2  using bitwise operators
-	var arr uint8
-	var arr1 uint8
-	arr = num >> 4
-	arr1 = num & 0x0F
-	return int8(arr), int8(arr1)
+	return int8(a * 10), int8(b * 10)
 }
 
 func Hex2Bin(in byte) string {
