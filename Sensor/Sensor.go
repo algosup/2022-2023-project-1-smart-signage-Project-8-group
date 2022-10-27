@@ -55,22 +55,6 @@ func main() {
 	}
 }
 
-// Handle the PWM LED and set the brightness based on the light sensor value
-func changeLight(light uint16, led machine.PWM) uint8 {
-	LEDsBrightness := uint8(float32(light) / 65535 * 100) // Get the percentage of the light sensor value
-
-	if LEDsBrightness > maxBrightness {
-		LEDsBrightness = maxBrightness
-	}
-
-	if LEDsBrightness < minBrightness {
-		LEDsBrightness = minBrightness
-	}
-
-	led.Set(uint16(float32(LEDsBrightness) / 100.0 * 65535.0))
-	return LEDsBrightness
-}
-
 func mainProg(hV machine.ADC, lV machine.ADC) {
 	lightSensorValue := changeLight(lS.Get(), led) // Get the value of the light sensor
 
@@ -123,11 +107,25 @@ func mainProg(hV machine.ADC, lV machine.ADC) {
 	year := bcdToDec(data[6]) + 2000
 	println("TIME;")
 	println("Year: ", year, "Month: ", month, "Day: ", day, "Hour: ", hour, "Minute: ", minute, "Seconds: ", seconds)
-	// InitAT() //make sure the AT module is ready
+	InitAT() //make sure the AT module is ready
 
 	println("str: ", str)
-	// SendMessage(str) //send the message to the gateway
-	time.Sleep(time.Second * 1)
+	SendMessage(str) //send the message to the gateway
+}
+
+// Handle the PWM LED and set the brightness based on the light sensor value
+func changeLight(light uint16, led machine.PWM) uint8 {
+	LEDsBrightness := uint8(float32(65535-light) / 65535 * 100) // Get the percentage of the light sensor value
+
+	if LEDsBrightness > maxBrightness {
+		LEDsBrightness = maxBrightness
+	}
+
+	if LEDsBrightness < minBrightness {
+		LEDsBrightness = minBrightness
+	}
+	led.Set(uint16(float32(LEDsBrightness) / 100.0 * 65535.0))
+	return LEDsBrightness
 }
 
 // Initialize the AT module
@@ -153,20 +151,16 @@ func SendMessage(payload string) {
 
 // Read the serial port of the lora module and return the message
 func ReadMessage(wT int8, wTS uint16) string {
-
-	data := make([]byte, 3)
-	timeMachine.bus.ReadRegister(timeMachine.Address, uint8(0x00), data)
-	seconds := bcdToDec(data[0] & 0x7F)
-	minute := bcdToDec(data[1])
-	hour := hoursBCDToInt(data[2])
-	println("TIME;")
-	println("Hour : ", hour, " Minute : ", minute, " Seconds : ", seconds)
 	led.Configure()
 	var msg string
 	timer := 0
 	msg1 := ""
 	var timeCheck uint16
-
+	if wT == 0 && wTS != 0 {
+		timeCheck = wTS
+	} else {
+		timeCheck = uint16(wT) * 60
+	}
 	for {
 		changeLight(lS.Get(), led) // Get the value of the light sensor                                        // Change the LED brightness based on the light sensor value
 		if timer >= int(timeCheck)*1000 || earlyStop {
