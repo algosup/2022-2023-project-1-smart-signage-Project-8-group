@@ -50,38 +50,39 @@ func main() {
 	*/
 }
 
-// Handle the ADC sensors and return the value in volts (float32)
-func ADCSensor(adc uint16) float32 {
-	ui := adc
-	return (float32(ui) / 65535.0) * 5.0
-}
-
 // Handle the PWM LED and set the brightness based on the light sensor value
-func changeLight(inLight float32, maxBrightness int8, minBrightness int8) uint16 {
-	//return percentage of inLight out of 65535
-	val := uint16(((5 - inLight) * 20) * 65535 / 100)
-	if val > uint16(float32(65535)/100*float32(maxBrightness)) {
-		return uint16(float32(65535) / 100 * float32(maxBrightness))
-	} else if val < uint16(float32(65535)/100*float32(minBrightness)) {
-		return uint16(float32(65535) / 100 * float32(minBrightness))
+func changeLight(light uint16, maxBrightness uint8, minBrightness uint8) uint8 {
+	LEDsBrightness := uint8(float32(light) / 65535 * 100) // Get the percentage of the light sensor value
+
+	if LEDsBrightness > maxBrightness {
+		LEDsBrightness = maxBrightness
 	}
-	return val
+
+	if LEDsBrightness < minBrightness {
+		LEDsBrightness = minBrightness
+	}
+
+	//led.Set(uint16(float32(LEDsBrightness) / 100.0 * 65535.0))
+	return LEDsBrightness
 }
 
-func mainProg(lS uint16, hV uint16, lV uint16, timeCounter uint8) (uint16, uint16, uint16, string) {
-	lSV := changeLight(ADCSensor(lS), 100, 0) // Get the value of the light sensor
+func mainProg(lS uint16, hV uint16, lV uint16, timeCounter uint8) (uint8, float32, float32, string) {
+	lightSensorValue := changeLight(lS, 100, 0) // Get the value of the light sensor
 
-	hVV := uint16(ADCSensor(hV)) // Read the high voltage sensor
-	lVV := uint16(ADCSensor(lV)) // Read the low voltage sensor
+	highVoltage := float32(hV) / 65535 * 100 // Read the high voltage sensor
+	lowVoltage := float32(lV) / 65535 * 100  // Read the low voltage sensor
+	/*println("lowVoltage: ", lowVoltage)
+	println("highVoltage: ", highVoltage)
+	println("lightSensorValue: ", lightSensorValue)*/
 
 	//uint to hex
-	str := strconv.FormatUint(uint64(float32(lSV)/65535*100), 16) //create percentage of light sensor value and return it in string hex format
+	str := strconv.FormatUint(uint64(float32(lightSensorValue)), 16) //create percentage of light sensor value and return it in string hex format
 	if len(str) == 1 {
 		str = "0" + str
 	}
 
-	if lSV != 0 {
-
+	if lightSensorValue != 0 {
+		timeCounter++
 		if timeCounter == 255 {
 			timeCounter = 0
 		}
@@ -91,7 +92,9 @@ func mainProg(lS uint16, hV uint16, lV uint16, timeCounter uint8) (uint16, uint1
 		str = str[:2] + "0" + str[2:]
 	}
 
+	// deadLeds := (2.5 - lowVoltage) / 0.12
 	//fake temporary data percentage added in str
+	// str += strconv.FormatUint(uint64(deadLeds), 16)
 	str += strconv.FormatUint(uint64(54), 16)
 	if len(str) == 5 {
 		str = str[:4] + "0" + str[4:]
@@ -103,5 +106,23 @@ func mainProg(lS uint16, hV uint16, lV uint16, timeCounter uint8) (uint16, uint1
 		str = str[:6] + "0" + str[6:]
 	}
 
-	return lSV, hVV, lVV, str
+	/*data := make([]byte, 8)
+	println("Reading;")
+	timeMachine.bus.ReadRegister(timeMachine.Address, uint8(0x00), data)
+	println("succeed;")
+	seconds := bcdToDec(data[0] & 0x7F)
+	minute := bcdToDec(data[1])
+	hour := hoursBCDToInt(data[2])
+	day := bcdToDec(data[3])
+	month := bcdToDec(data[4])
+	year := bcdToDec(data[6]) + 2000
+	println("TIME;")
+	println("Year: ", year, "Month: ", month, "Day: ", day, "Hour: ", hour, "Minute: ", minute, "Seconds: ", seconds)*/
+	// InitAT() //make sure the AT module is ready
+
+	//println("str: ", str)
+	// SendMessage(str) //send the message to the gateway
+	//time.Sleep(time.Second * 1)
+
+	return lightSensorValue, highVoltage, lowVoltage, str
 }
