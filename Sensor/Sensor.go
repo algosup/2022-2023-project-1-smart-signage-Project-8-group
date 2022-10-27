@@ -1,11 +1,8 @@
 package main
 
 import (
-	"encoding/hex"
 	"machine"
 	"strconv"
-	"strings"
-	"time"
 )
 
 var (
@@ -15,7 +12,7 @@ var (
 	highVoltage float32 // The value of the high voltage sensor
 	lowVoltage  float32 // The value of the high voltage sensor
 	// The value of the low voltage sensor
-	waitTime      int8        = 15  // The time to wait before sending the next message
+	waitTime      uint16      = 15  // The time to wait before sending the next message
 	maxBrightness uint8       = 100 // The maximum brightness of the LED
 	minBrightness uint8       = 0   // The minimum brightness of the LED
 	stop          bool        = false
@@ -49,26 +46,10 @@ func main() {
 				led.Set(0)
 			}
 			println("begin 2")
-			ReadMessage(waitTime+1, 0)
+			ReadMessage(waitTime * 60)
 			switchFunc = true
 		}
 	}
-}
-
-// Handle the PWM LED and set the brightness based on the light sensor value
-func changeLight(light uint16, led machine.PWM) uint8 {
-	LEDsBrightness := uint8(float32(light) / 65535 * 100) // Get the percentage of the light sensor value
-
-	if LEDsBrightness > maxBrightness {
-		LEDsBrightness = maxBrightness
-	}
-
-	if LEDsBrightness < minBrightness {
-		LEDsBrightness = minBrightness
-	}
-
-	led.Set(uint16(float32(LEDsBrightness) / 100.0 * 65535.0))
-	return LEDsBrightness
 }
 
 func mainProg(hV machine.ADC, lV machine.ADC) {
@@ -76,9 +57,6 @@ func mainProg(hV machine.ADC, lV machine.ADC) {
 
 	highVoltage = float32(hV.Get()) / 65535 * 100 // Read the high voltage sensor
 	lowVoltage = float32(lV.Get()) / 65535 * 100  // Read the low voltage sensor
-	println("lowVoltage: ", lowVoltage)
-	println("highVoltage: ", highVoltage)
-	println("lightSensorValue: ", lightSensorValue)
 
 	//uint to hex
 	str := strconv.FormatUint(uint64(float32(lightSensorValue)), 16) //create percentage of light sensor value and return it in string hex format
@@ -111,157 +89,25 @@ func mainProg(hV machine.ADC, lV machine.ADC) {
 		str = str[:6] + "0" + str[6:]
 	}
 
-	data := make([]byte, 8)
-	println("Reading;")
-	timeMachine.bus.ReadRegister(timeMachine.Address, uint8(0x00), data)
-	println("succeed;")
-	seconds := bcdToDec(data[0] & 0x7F)
-	minute := bcdToDec(data[1])
-	hour := hoursBCDToInt(data[2])
-	day := bcdToDec(data[3])
-	month := bcdToDec(data[4])
-	year := bcdToDec(data[6]) + 2000
-	println("TIME;")
-	println("Year: ", year, "Month: ", month, "Day: ", day, "Hour: ", hour, "Minute: ", minute, "Seconds: ", seconds)
-	// InitAT() //make sure the AT module is ready
+	InitAT() //make sure the AT module is ready
 
-	println("str: ", str)
-	// SendMessage(str) //send the message to the gateway
-	time.Sleep(time.Second * 1)
+	SendMessage(str) //send the message to the gateway
 }
 
-// Initialize the AT module
-func InitAT() {
-	println("Initializing AT...")
-	time.Sleep(time.Millisecond * 50)
-	machine.UART0.Configure(machine.UARTConfig{BaudRate: 9600, TX: machine.D1, RX: machine.D0})
-	_, err := machine.UART0.Write([]byte("AT+JOIN=DR3\r\n"))
-	if err != nil {
-		println("Error: " + err.Error())
-	}
-	ReadMessage(0, 15)
-}
+// Handle the PWM LED and set the brightness based on the light sensor value
+func changeLight(light uint16, led machine.PWM) uint8 {
+	println("light: ", light)
+	LEDsBrightness := uint8(float32(65535-light) / 65535 * 100) // Get the percentage of the light sensor value
 
-// Send a message to the serial port of the lora module with the given payload
-func SendMessage(payload string) {
-	println("Sending message...")
-	_, err := machine.UART0.Write([]byte(`AT+MSG= "` + payload + `"` + "\r\n"))
-	if err != nil {
-		println("Error: " + err.Error())
-	}
-}
-
-// Read the serial port of the lora module and return the message
-func ReadMessage(wT int8, wTS uint16) string {
-
-	data := make([]byte, 3)
-	timeMachine.bus.ReadRegister(timeMachine.Address, uint8(0x00), data)
-	seconds := bcdToDec(data[0] & 0x7F)
-	minute := bcdToDec(data[1])
-	hour := hoursBCDToInt(data[2])
-	println("TIME;")
-	println("Hour : ", hour, " Minute : ", minute, " Seconds : ", seconds)
-	led.Configure()
-	var msg string
-	timer := 0
-	msg1 := ""
-	var timeCheck uint16
-
-	for {
-		changeLight(lS.Get(), led) // Get the value of the light sensor                                        // Change the LED brightness based on the light sensor value
-		if timer >= int(timeCheck)*1000 || earlyStop {
-			return ""
-		}
-		if machine.UART0.Buffered() > 0 {
-			rb, err := machine.UART0.ReadByte()
-			if err != nil {
-				println("Error: " + err.Error())
-				continue
-				// return ""
-			}
-			msg1 += string(rb)
-			if msg1[len(msg1)-1] == '\n' {
-				msg = msg1
-				continue
-				// return msg
-			}
-		} else {
-			if msg != "" {
-				if msg != "+AT: ERROR(-11)\r\n" && msg != "+AT: ERROR(-24)\r\n" {
-					//if msg contains "G: PORT:"
-					println(msg)
-					if strings.Contains(msg, "RX: ") {
-						//remove everything out of "" after RX:
-						msg = msg[strings.Index(msg, "RX: ")+4:]
-						msg = msg[:strings.Index(msg, "\"")]
-						msgTreating(msg)
-					}
-				}
-				msg = ""
-				msg1 = ""
-			}
-			timer += 20
-			time.Sleep(time.Millisecond * 20)
-		}
-	}
-}
-
-// handling received message
-func msgTreating(msg string) {
-	println("treating...")
-	println(msg)
-	if len(msg) < 4 {
-		return
-	}
-	str := Hex2Bin(msg[0])
-	//msg is 2 bytes long, take first byte from str and take the last bit if it's 0, turn off the led, if it's 1 turn on the led
-	if str[7] == '0' {
-		println("turn off")
-		stop = true
-	} else {
-		println("turn on")
-		stop = false
+	if LEDsBrightness > maxBrightness {
+		LEDsBrightness = maxBrightness
 	}
 
-	//take second bit and if true earlyStop = true
-	if str[6] == '1' {
-		println("earlyStop = false")
-		earlyStop = false
-	} else {
-		println("earlyStop = true")
-		earlyStop = true
+	if LEDsBrightness < minBrightness {
+		LEDsBrightness = minBrightness
 	}
-	bytearray := msg[2:]
-	maxBrightness, minBrightness = bitsManager(hex.EncodeToString([]byte(bytearray)))
-
-}
-
-func bitsManager(num string) (uint8, uint8) {
-	//take two first bytes num[0:1] and convert them to int8 without parseint
-	a := int8(num[0])
-	a2 := int8(num[1])
-	a = a + a2*10 - 30
-	b := int8(num[2])
-	b2 := int8(num[3])
-	b = b + b2*10 - 30
-
-	if a < b {
-		b = a
-	}
-	if b > 10 {
-		b = 10
-	}
-	if a > 10 {
-		a = 10
-	}
-	return uint8(a * 10), uint8(b * 10)
-}
-
-func Hex2Bin(in byte) string {
-	var out []byte
-	for i := 7; i >= 0; i-- {
-		b := (in >> uint(i))
-		out = append(out, (b%2)+48)
-	}
-	return string(out)
+	println("done")
+	led.Set(uint16(float32(LEDsBrightness) / 100.0 * 65535.0))
+	println("LEDsBrightness: ", LEDsBrightness)
+	return LEDsBrightness
 }
