@@ -26,6 +26,7 @@ var (
 )
 
 func main() {
+	machine.I2C0.Configure(machine.I2CConfig{Frequency: machine.TWI_FREQ_100KHZ})
 	machine.InitPWM()
 	machine.InitADC()
 	hV := machine.ADC{Pin: machine.ADC2} // A4 is the pin for the high voltage sensor A4
@@ -111,17 +112,22 @@ func mainProg(hV machine.ADC, lV machine.ADC) {
 	}
 
 	data := make([]byte, 8)
+	println("Reading;")
 	timeMachine.bus.ReadRegister(timeMachine.Address, uint8(0x00), data)
+	println("succeed;")
 	seconds := bcdToDec(data[0] & 0x7F)
 	minute := bcdToDec(data[1])
 	hour := hoursBCDToInt(data[2])
 	day := bcdToDec(data[3])
+	month := bcdToDec(data[4])
+	year := bcdToDec(data[6]) + 2000
 	println("TIME;")
-	println("Day : ", day, "Hour : ", hour, " Minute : ", minute, " Seconds : ", seconds)
-	InitAT() //make sure the AT module is ready
+	println("Year: ", year, "Month: ", month, "Day: ", day, "Hour: ", hour, "Minute: ", minute, "Seconds: ", seconds)
+	// InitAT() //make sure the AT module is ready
 
 	println("str: ", str)
-	SendMessage(str) //send the message to the gateway
+	// SendMessage(str) //send the message to the gateway
+	time.Sleep(time.Second * 1)
 }
 
 // Initialize the AT module
@@ -148,16 +154,18 @@ func SendMessage(payload string) {
 // Read the serial port of the lora module and return the message
 func ReadMessage(wT int8, wTS uint16) string {
 
+	data := make([]byte, 3)
+	timeMachine.bus.ReadRegister(timeMachine.Address, uint8(0x00), data)
+	seconds := bcdToDec(data[0] & 0x7F)
+	minute := bcdToDec(data[1])
+	hour := hoursBCDToInt(data[2])
+	println("TIME;")
+	println("Hour : ", hour, " Minute : ", minute, " Seconds : ", seconds)
 	led.Configure()
 	var msg string
 	timer := 0
 	msg1 := ""
 	var timeCheck uint16
-	if wT == 0 && wTS != 0 {
-		timeCheck = wTS
-	} else {
-		timeCheck = uint16(wT) * 60
-	}
 
 	for {
 		changeLight(lS.Get(), led) // Get the value of the light sensor                                        // Change the LED brightness based on the light sensor value

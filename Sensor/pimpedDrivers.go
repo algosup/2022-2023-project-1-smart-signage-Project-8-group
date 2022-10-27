@@ -1,8 +1,6 @@
 package main
 
 import (
-	"time"
-
 	"tinygo.org/x/drivers"
 )
 
@@ -29,22 +27,6 @@ func New(bus drivers.I2C) Device {
 		Address:     uint8(I2CAddress),
 		AddressSRAM: SRAMBeginAddres,
 	}
-}
-
-// ReadTime returns the date and time
-func (d *Device) ReadTime() time.Time {
-	data := make([]byte, 8)
-	d.bus.ReadRegister(d.Address, uint8(TimeDate), data)
-	seconds := bcdToDec(data[0] & 0x7F)
-	minute := bcdToDec(data[1])
-	hour := hoursBCDToInt(data[2])
-	day := bcdToDec(data[4])
-	month := time.Month(bcdToDec(data[5]))
-	year := bcdToDec(data[6])
-	year += 2000
-
-	t := time.Date(year, month, day, hour, minute, seconds, 0, time.UTC)
-	return t
 }
 
 // decToBcd converts int to BCD
