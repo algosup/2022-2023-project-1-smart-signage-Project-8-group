@@ -5,6 +5,7 @@ The group 8 is composed of :
 - [MOLNAR Ivan](https://github.com/ivan-molnar) - Tech Lead
 - [de LAVENNE de CHOULOT Louis](https://github.com/Louis-de-Lavenne-de-Choulot) - Software Engineer
 - [BERNARD Max](https://github.com/maxbernard3) - Software Engineer
+- [GROSSO Jason](https://github.com/JasonGROSSO) - QA
 
 ## Project Scope
 This project was proposed by SignAll, a French company that has been manufacturing large luminous signage since 1962. They supply a large number of customers such as McDonald’s, Burger King, La Poste, Orange, AXA, Crédit Agricole, Total, etc. to name a few.
