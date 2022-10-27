@@ -4,26 +4,52 @@ import (
 	"testing"
 )
 
+func TestADCSensor(t *testing.T) {
+	t.Run("test ADCSensor()", func(t *testing.T) {
+		e := float32(1.1852446)
+		result := ADCSensor(uint16(15535))
+		if result != e {
+			t.Errorf("expected %v, got %v", e, result)
+		}
+	})
+
+	t.Run("test ADCSensor()", func(t *testing.T) {
+		e := float32(3.05180438)
+		result := ADCSensor(uint16(40000))
+		if result != e {
+			t.Errorf("expected %v, got %v", e, result)
+		}
+	})
+
+	t.Run("test ADCSensor()", func(t *testing.T) {
+		e := float32(5)
+		result := ADCSensor(uint16(65535))
+		if result != e {
+			t.Errorf("expected %v, got %v", e, result)
+		}
+	})
+}
+
 func TestChangeLight(t *testing.T) {
 	t.Run("test ChangeLight()", func(t *testing.T) {
-		e := uint8(35)
-		result := changeLight(uint16(23000), 100, 0)
+		e := uint16(0)
+		result := changeLight(float32(5), 100, 0)
 		if result != e {
 			t.Errorf("expected %v, got %v", e, result)
 		}
 	})
 
 	t.Run("test ChangeLight()", func(t *testing.T) {
-		e := uint8(0)
-		result := changeLight(uint16(0), 100, 0)
+		e := uint16(32767)
+		result := changeLight(float32(2.5), 100, 0)
 		if result != e {
 			t.Errorf("expected %v, got %v", e, result)
 		}
 	})
 
 	t.Run("test ChangeLight()", func(t *testing.T) {
-		e := uint8(99)
-		result := changeLight(uint16(65000), 100, 0)
+		e := uint16(65403)
+		result := changeLight(float32(0.01), 100, 0)
 		if result != e {
 			t.Errorf("expected %v, got %v", e, result)
 		}
@@ -32,10 +58,10 @@ func TestChangeLight(t *testing.T) {
 
 func TestMainProg(t *testing.T) {
 	t.Run("test MainProg()", func(t *testing.T) {
-		e1 := uint8(100)
-		e2 := float32(32.043945)
-		e3 := float32(30.518044)
-		e4 := "647b3600"
+		e1 := uint16(0)
+		e2 := uint16(1)
+		e3 := uint16(1)
+		e4 := "00360"
 
 		r1, r2, r3, r4 := mainProg(uint16(65535), uint16(21000), uint16(20000), uint8(122))
 		if r1 != e1 {
@@ -53,10 +79,10 @@ func TestMainProg(t *testing.T) {
 	})
 
 	t.Run("test MainProg()", func(t *testing.T) {
-		e1 := uint8(19)
-		e2 := float32(38.147552)
-		e3 := float32(99.18364)
-		e4 := "130d3600"
+		e1 := uint16(52913)
+		e2 := uint16(1)
+		e3 := uint16(4)
+		e4 := "500c3600"
 
 		r1, r2, r3, r4 := mainProg(uint16(12622), uint16(25000), uint16(65000), uint8(12))
 		if r1 != e1 {
