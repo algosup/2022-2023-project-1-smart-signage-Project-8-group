@@ -11,11 +11,11 @@ var (
 	highVoltage float32 // The value of the high voltage sensor
 	lowVoltage  float32 // The value of the high voltage sensor
 	// The value of the low voltage sensor
-	waitTime      int8  = 15  // The time to wait before sending the next message
-	maxBrightness int8  = 100 // The maximum brightness of the LED
-	minBrightness int8  = 0   // The minimum brightness of the LED
-	stop          bool  = false
-	timeCounter   uint8 = 0
+	waitTime      uint32 = 300 // The time to wait before sending the next message
+	maxBrightness int8   = 100 // The maximum brightness of the LED
+	minBrightness int8   = 0   // The minimum brightness of the LED
+	stop          bool   = false
+	timeCounter   uint8  = 0
 )
 
 func main() {
@@ -42,7 +42,7 @@ func main() {
 				led.Set(0)
 			}
 			println("begin 2")
-			ReadMessage(waitTime + 1)
+			ReadMessage(waitTime*1000 + 90000)
 			switchFunc = true
 		}
 	}
