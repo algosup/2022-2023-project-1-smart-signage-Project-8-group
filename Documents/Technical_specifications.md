@@ -173,5 +173,6 @@ The data packets structure is as follows:
 
 ## Downlink (Server-To-Lora)
 
-- Turn on/off: Turn LEDs on/off (Turn device on/off later if a more precise clock is available)
 - Change min/max light level: Set the minimum and maximum operational light levels for the leds in increments of 10%. First 4 bits represent the minimum light level and second 4 bits represent the maximum light level (values between 0-10).
+- Set times where leds should turn up and down (4 bites).
+- Set days on which the device should function.
